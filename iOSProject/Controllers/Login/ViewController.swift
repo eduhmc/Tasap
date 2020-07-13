@@ -25,6 +25,7 @@ class ViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.hideKeyboardWhenTappedAround()
         
         let ud = UserDefaults.standard
         if let userData = ud.value(forKey: "currentUser") as? Data,

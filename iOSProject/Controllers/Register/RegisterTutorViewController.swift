@@ -80,11 +80,11 @@ class RegisterTutorViewController: UIViewController {
 
     fileprivate func baseQuery() -> Query {
         
-        if let university = self.user?.university, university.count > 1 {
-            return Firestore.firestore().collection("facultades").whereField("university", isEqualTo: university)
+        if let user = self.user, user.university.count > 1, user.country.count > 1{
+            return Firestore.firestore().collection("countries").document(user.country).collection("universities").document(user.university).collection("careers")
         }
         
-        return Firestore.firestore().collection("facultades")
+        return Firestore.firestore().collection("careers")
     }
     
     override func viewDidLoad() {

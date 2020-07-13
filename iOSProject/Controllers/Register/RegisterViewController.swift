@@ -21,12 +21,14 @@ enum RegisterState {
     case emailFormatError
     case passwordEmpty
     case universityEmpty
+    case countryEmpty
     case passwordMinimun
     case succes(user: User)
 }
 
 protocol RegisterDelegate: class {
     func fetchUniversity(university: University)
+    func fetchCountry(country: Country)
 }
 
 class RegisterViewController: UIViewController {
@@ -35,22 +37,24 @@ class RegisterViewController: UIViewController {
     @IBOutlet weak var lastNameLabel: UITextField!
     @IBOutlet weak var emailLabel: UITextField!
     @IBOutlet weak var passwordLabel: UITextField!
+    @IBOutlet weak var countryLabel: UITextField!
     @IBOutlet weak var universityLabel: UITextField!
     @IBOutlet weak var tutorSwitch: UISwitch!
     @IBOutlet weak var registerButton: UIButton!
     @IBOutlet weak var userImageView: UIImageView!
+    @IBOutlet weak var mainView: UIView!
     
     @IBOutlet weak var topConstraint: NSLayoutConstraint!
     
     private var university: University?
+    private var country: Country?
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        self.hideKeyboardWhenTappedAround() 
         userImageView.makeRounded()
     }
-    
-    
+ 
     @IBAction func registerButtonTapped(_ sender: UIButton) {
         
         var error = ""
@@ -86,6 +90,11 @@ class RegisterViewController: UIViewController {
         case .passwordMinimun:
             error = "The password must be 6 characters long or more"
             popupShow(message: error)
+        case .countryEmpty:
+            error = "Please complete Country"
+            popupShow(message: error)
+        break
+
         case .universityEmpty:
             error = "Please complete University"
             popupShow(message: error)
@@ -101,7 +110,7 @@ class RegisterViewController: UIViewController {
     
     func validateForm() -> RegisterState {
         
-        var firstName = "", lastName = "", emailUser = "", passwordUser = "", universityCode = ""
+        var firstName = "", lastName = "", emailUser = "", passwordUser = "", universityCode = "", countryCode = ""
         
         if let first = firstNameLabel.text, first != "" {
             firstName = first
@@ -113,6 +122,12 @@ class RegisterViewController: UIViewController {
             lastName = last
         }else{
             return .lastEmpty
+        }
+        
+        if let country = countryLabel.text, country != "" {
+            countryCode = (self.country?.document!.documentID)!
+        } else {
+            return .countryEmpty
         }
         
         if let university = universityLabel.text, university != "" {
@@ -153,7 +168,7 @@ class RegisterViewController: UIViewController {
  
         if firstName != "" && lastName != "" && emailUser != ""  && passwordUser != ""{
             
-            var user = User(first: firstName, last: lastName, description: "To start to be a tutor, please edit your price, description and courses.", email: emailUser, password: passwordUser,imagePath: "", price:"0.0", ratingNumber: 1, ratingAverage: 5, courses: ["00000000000000000000"], university: universityCode, fcmToken: ".", country: ".")
+            var user = User(first: firstName, last: lastName, description: "To start to be a tutor, please edit your price, description and courses.", email: emailUser, password: passwordUser,imagePath: "", price:"0.0", ratingNumber: 1, ratingAverage: 5, courses: ["00000000000000000000"], university: universityCode, fcmToken: ".", country: countryCode)
             user.image = userImageView
             return .succes(user: user)
         }
@@ -253,8 +268,23 @@ class RegisterViewController: UIViewController {
         self.dismiss(animated: true, completion: nil)
     }
     
+    
+    @IBAction func countryButtonTapped(_ sender: Any) {
+        
+        self.performSegue(withIdentifier: "countrySegue", sender: nil)
+    }
+    
+    
     @IBAction func universityButtonTapped(_ sender: Any) {
-        self.performSegue(withIdentifier: "universitySegue", sender: nil)
+    
+        if self.country != nil {
+            self.performSegue(withIdentifier: "universitySegue", sender: nil)
+        }else{
+            let error = "Please complete Country"
+            popupShow(message: error)
+        }
+        
+    
     }
     
     
@@ -296,6 +326,12 @@ class RegisterViewController: UIViewController {
 
             let destinationVC = segue.destination as! UniversityViewController
             destinationVC.delegate = self
+            destinationVC.country = self.country
+
+        }else if segue.identifier == "countrySegue" {
+
+            let destinationVC = segue.destination as! CountryViewController
+            destinationVC.delegate = self
 
         }
             
@@ -313,11 +349,11 @@ extension RegisterViewController: UITextFieldDelegate {
     func textFieldDidBeginEditing(_ textField: UITextField) {
         
         if textField == emailLabel{
-            topConstraint.constant = -20
+            topConstraint.constant = -40
         }
         
         if textField == passwordLabel{
-            topConstraint.constant = -50
+            topConstraint.constant = -70
         }
         
         self.view.layoutIfNeeded()
@@ -337,5 +373,14 @@ extension RegisterViewController: RegisterDelegate {
         self.university = university
         self.universityLabel.text = university.name
     }
+    
+    func fetchCountry(country: Country) {
+        self.country = country
+        self.countryLabel.text = country.name
+        
+        self.university = nil
+        self.universityLabel.text = ""
+    }
+    
 }
 

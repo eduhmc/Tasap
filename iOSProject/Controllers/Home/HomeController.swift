@@ -25,23 +25,28 @@ class HomeController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        if let user = self.user{
+        if let userAuth = AuthenticationManager.shared.currentUser{
            
-            nameLabel.text = "Hello \(user.first)"
+            nameLabel.text = "Hello \(userAuth.first)"
             
-            let docRef = Firestore.firestore().collection("universities").document(user.university)
-                   
-            docRef.getDocument { (document, error) in
-                if let document = document, document.exists {
-
-                    let university = University(dictionary: document.data()!)
-                    self.universityLabel.text = university?.name
+            UniversityAPI.shared.get(documentID: userAuth.university) { result in
+                switch result {
+                    case .success(let document):
                     
-                } else {
-                    self.universityLabel.text = ""
-                    print("Document does not exist")
+                        if let university = University(dictionary: document.data()!){
+                            
+                            AuthenticationManager.shared.currentUniversity = university
+                            self.universityLabel.text = university.name
+                            
+                        }
+                    
+                    case .failure(let error):
+                        print(error)
+                        self.universityLabel.text = ""
+                        print("Document does not exist")
                 }
             }
+            
         }
     }
     

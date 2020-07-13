@@ -79,11 +79,12 @@ class UpdateCareerViewController: UIViewController {
     }
 
     fileprivate func baseQuery() -> Query {
-        if let university = self.user?.university, university.count > 1 {
-            return Firestore.firestore().collection("facultades").whereField("university", isEqualTo: university)
+        
+        if let userAuth = AuthenticationManager.shared.currentUser{
+            return Firestore.firestore().collection("countries").document(userAuth.country).collection("universities").document(userAuth.university).collection("careers")
         }
         
-        return Firestore.firestore().collection("facultades")
+        return Firestore.firestore().collection("careers")
     }
     
     override func viewDidLoad() {

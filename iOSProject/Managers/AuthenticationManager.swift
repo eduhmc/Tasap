@@ -31,6 +31,8 @@ class AuthenticationManager: AuthenticationManagerProtocol {
         }
     }
     
+    var currentUniversity: University? 
+    
     private let userAPI = UserAPI()
     
     func login(with credentials: User.Credentials, completion: @escaping (Result<User, AuthenticationError>) -> Void) {

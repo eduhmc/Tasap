@@ -11,7 +11,8 @@ import FirebaseFirestore
 
 class HomeTutorViewController: UIViewController {
 
-     @IBOutlet weak var homeTutorTableView: UITableView!
+    @IBOutlet weak var homeTutorTableView: UITableView!
+    @IBOutlet weak var emptyTableMessageView: UIView!
     
     var course: Course?
     
@@ -20,6 +21,13 @@ class HomeTutorViewController: UIViewController {
        
     private var users: [User] = [] {
         didSet {
+            
+            if users.count > 0 {
+                emptyTableMessageView.isHidden = true
+            }else{
+                emptyTableMessageView.isHidden = false
+            }
+            
             let ratingNumbers = users.map { "\(Int($0.ratingAverage.rounded()))" }
             let uniqueRatingNumbers = Array(Set(ratingNumbers))
            

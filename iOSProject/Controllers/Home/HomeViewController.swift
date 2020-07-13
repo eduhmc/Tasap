@@ -195,7 +195,7 @@ class HomeViewController: UIViewController {
             return Firestore.firestore().collection("countries").document(user.country).collection("universities").document(user.university).collection("careers")
         }
         
-        return Firestore.firestore().collection("facultades")
+        return Firestore.firestore().collection("careers")
     }
     
     override func viewDidLoad() {

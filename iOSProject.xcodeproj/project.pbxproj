@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		0BDE8112254318969E0F69D9 /* Pods_iOSProjectTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FAD3962A897CB49B55E43ED4 /* Pods_iOSProjectTests.framework */; };
+		2200715B24B83604004F0B1F /* CountryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2200715A24B83603004F0B1F /* CountryViewController.swift */; };
+		2200715D24B83B4C004F0B1F /* Country.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2200715C24B83B4C004F0B1F /* Country.swift */; };
 		2200843F2493380B00F385AD /* UITextField+DoneCancelToolbar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2200843E2493380B00F385AD /* UITextField+DoneCancelToolbar.swift */; };
 		22008441249341EF00F385AD /* UISearchBar+UIColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22008440249341EF00F385AD /* UISearchBar+UIColor.swift */; };
 		220AA9A7245B65D400314E5C /* EditNameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 220AA9A6245B65D400314E5C /* EditNameViewController.swift */; };
@@ -66,6 +68,7 @@
 		22A03C582469E66800E18088 /* CalendarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22A03C572469E66800E18088 /* CalendarViewController.swift */; };
 		22B67B252495AE0800932008 /* UserDefaultManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22B67B242495AE0800932008 /* UserDefaultManager.swift */; };
 		22B8A56E2481D02400044123 /* ChatsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22B8A56D2481D02400044123 /* ChatsViewController.swift */; };
+		22C931E624BD0C580007F2FE /* UIViewController+UIKeyboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22C931E524BD0C580007F2FE /* UIViewController+UIKeyboard.swift */; };
 		22CBDDBF2467608F0097DC3F /* Calendar.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 22CBDDBE2467608F0097DC3F /* Calendar.storyboard */; };
 		22D6F1372485827F008704DD /* UniversityAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22D6F1362485827F008704DD /* UniversityAPI.swift */; };
 		22E375D224511EB8001B6422 /* Cosmos.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22E375D124511EB8001B6422 /* Cosmos.swift */; };
@@ -95,6 +98,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		2200715A24B83603004F0B1F /* CountryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountryViewController.swift; sourceTree = "<group>"; };
+		2200715C24B83B4C004F0B1F /* Country.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Country.swift; sourceTree = "<group>"; };
 		2200843E2493380B00F385AD /* UITextField+DoneCancelToolbar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITextField+DoneCancelToolbar.swift"; sourceTree = "<group>"; };
 		22008440249341EF00F385AD /* UISearchBar+UIColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UISearchBar+UIColor.swift"; sourceTree = "<group>"; };
 		220AA9A6245B65D400314E5C /* EditNameViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditNameViewController.swift; sourceTree = "<group>"; };
@@ -159,6 +164,7 @@
 		22A03C572469E66800E18088 /* CalendarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarViewController.swift; sourceTree = "<group>"; };
 		22B67B242495AE0800932008 /* UserDefaultManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultManager.swift; sourceTree = "<group>"; };
 		22B8A56D2481D02400044123 /* ChatsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatsViewController.swift; sourceTree = "<group>"; };
+		22C931E524BD0C580007F2FE /* UIViewController+UIKeyboard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+UIKeyboard.swift"; sourceTree = "<group>"; };
 		22CBDDBE2467608F0097DC3F /* Calendar.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Calendar.storyboard; sourceTree = "<group>"; };
 		22D6F1362485827F008704DD /* UniversityAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UniversityAPI.swift; sourceTree = "<group>"; };
 		22E375D124511EB8001B6422 /* Cosmos.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Cosmos.swift; sourceTree = "<group>"; };
@@ -276,6 +282,7 @@
 				227AF6B32475D4AD00BE00AF /* Request.swift */,
 				229D6BD2248098FB007FF875 /* Chat.swift */,
 				229D6BD424809ABE007FF875 /* Message.swift */,
+				2200715C24B83B4C004F0B1F /* Country.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -350,6 +357,7 @@
 				22639010244254BD0076DFB4 /* RegisterTutorViewController.swift */,
 				22639017244260DF0076DFB4 /* RegisterTutorDetailViewController.swift */,
 				220F74BB245A1C21003922C7 /* UniversityViewController.swift */,
+				2200715A24B83603004F0B1F /* CountryViewController.swift */,
 			);
 			path = Register;
 			sourceTree = "<group>";
@@ -447,6 +455,7 @@
 		22B2894E2496A836000CA33E /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				22C931E424BD0BF90007F2FE /* UIViewController */,
 				22B289522496A8AE000CA33E /* UIView */,
 				22B289512496A88C000CA33E /* UISearchBar */,
 				22B289502496A87B000CA33E /* UITextField */,
@@ -485,6 +494,14 @@
 				229FE562245DE6F800A9958D /* UIView+IBInspectableCustom.swift */,
 			);
 			path = UIView;
+			sourceTree = "<group>";
+		};
+		22C931E424BD0BF90007F2FE /* UIViewController */ = {
+			isa = PBXGroup;
+			children = (
+				22C931E524BD0C580007F2FE /* UIViewController+UIKeyboard.swift */,
+			);
+			path = UIViewController;
 			sourceTree = "<group>";
 		};
 		22E375D024511CE0001B6422 /* Utils */ = {
@@ -700,6 +717,7 @@
 				22A03C582469E66800E18088 /* CalendarViewController.swift in Sources */,
 				2211D6002435899600E923DC /* ViewController.swift in Sources */,
 				22FC7FC9243FBA67000FAD33 /* HomeTutorViewController.swift in Sources */,
+				22C931E624BD0C580007F2FE /* UIViewController+UIKeyboard.swift in Sources */,
 				22E375DA24515873001B6422 /* Review.swift in Sources */,
 				2265B8D0244A7E0F006A257D /* HomeTutorDetailViewController.swift in Sources */,
 				22F651E8243A94C000D625D0 /* Career.swift in Sources */,
@@ -714,6 +732,7 @@
 				2280C1BD2489A1B00009C738 /* PushNotificationAPI.swift in Sources */,
 				228DE49C24887439006B5145 /* AuthenticationManager.swift in Sources */,
 				22F651EA243A9E9300D625D0 /* HomeDetailTableViewCell.swift in Sources */,
+				2200715D24B83B4C004F0B1F /* Country.swift in Sources */,
 				229FE565245E3E3A00A9958D /* HomeController.swift in Sources */,
 				22E375D524511F86001B6422 /* RatingViewController.swift in Sources */,
 				22E375D224511EB8001B6422 /* Cosmos.swift in Sources */,
@@ -730,6 +749,7 @@
 				22008441249341EF00F385AD /* UISearchBar+UIColor.swift in Sources */,
 				224FB6EC2447C152008466F7 /* ImagePickerManager.swift in Sources */,
 				229FE563245DE6F900A9958D /* UIView+IBInspectableCustom.swift in Sources */,
+				2200715B24B83604004F0B1F /* CountryViewController.swift in Sources */,
 				22F651E6243A92AE00D625D0 /* HomeDetailViewController.swift in Sources */,
 				22674A1224561A89001DDCC6 /* UpdateCoursesViewController.swift in Sources */,
 				22640BA6246C9AB8002C9664 /* AddEventViewController.swift in Sources */,
@@ -922,12 +942,12 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = KXT8SGMSAX;
 				INFOPLIST_FILE = iOSProject/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.2;
+				MARKETING_VERSION = 2.4;
 				PRODUCT_BUNDLE_IDENTIFIER = com.eduhmc.tasap;
 				PRODUCT_NAME = tasap;
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -947,12 +967,12 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = KXT8SGMSAX;
 				INFOPLIST_FILE = iOSProject/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.2;
+				MARKETING_VERSION = 2.4;
 				PRODUCT_BUNDLE_IDENTIFIER = com.eduhmc.tasap;
 				PRODUCT_NAME = tasap;
 				PROVISIONING_PROFILE_SPECIFIER = "Tasap Distribution Profile";

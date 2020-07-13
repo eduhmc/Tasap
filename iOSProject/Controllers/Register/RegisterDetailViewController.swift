@@ -24,6 +24,7 @@ class RegisterDetailViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.hideKeyboardWhenTappedAround()
         self.descriptionLabel.addDoneButton(title: "Done", target: self, selector: #selector(tapDone(sender:)))
         // Do any additional setup after loading the view.
     }

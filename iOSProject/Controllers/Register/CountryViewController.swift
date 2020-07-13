@@ -1,36 +1,25 @@
 //
-//  UniversityViewController.swift
+//  CountryViewController.swift
 //  iOSProject
 //
-//  Created by Roger Arroyo on 4/29/20.
+//  Created by Roger Arroyo on 7/10/20.
 //  Copyright © 2020 Eduardo Huerta. All rights reserved.
 //
 
 import UIKit
 import FirebaseFirestore
 
-class UniversityViewController: UIViewController {
+class CountryViewController: UIViewController {
 
-    @IBOutlet weak var universityTableView: UITableView!
-    @IBOutlet weak var emptyTableMessageView: UIView!
+    @IBOutlet weak var countryTableView: UITableView!
     
     weak var delegate: RegisterDelegate?
     
-    var country: Country?
-    
-    
-    private var universities: [University] = [] {
+    private var countries: [Country] = [] {
         didSet {
-            
-            if universities.count > 0 {
-                emptyTableMessageView.isHidden = true
-            }else{
-                emptyTableMessageView.isHidden = false
-            }
-            
-            let coursesSorted = universities.sorted { $0.name < $1.name  }
-            universities = coursesSorted
-            self.universityTableView.reloadData()
+            let countriesSorted = countries.sorted { $0.name < $1.name  }
+            countries = countriesSorted
+            self.countryTableView.reloadData()
        }
     }
     
@@ -54,8 +43,8 @@ class UniversityViewController: UIViewController {
           print("Error fetching snapshot results: \(error!)")
           return
         }
-        let models = snapshot.documents.map { (document) -> University in
-          if var model = University(dictionary: document.data()) {
+        let models = snapshot.documents.map { (document) -> Country in
+          if var model = Country(dictionary: document.data()) {
             model.document = document
             return model
           } else {
@@ -63,7 +52,7 @@ class UniversityViewController: UIViewController {
             fatalError("Unable to initialize type \(University.self) with dictionary \(document.data())")
           }
         }
-        self.universities = models
+        self.countries = models
 
       }
 
@@ -74,7 +63,7 @@ class UniversityViewController: UIViewController {
     }
 
     fileprivate func baseQuery() -> Query {
-        return Firestore.firestore().collection("countries").document(country!.document!.documentID).collection("universities")
+        return Firestore.firestore().collection("countries")
     }
        
     override func viewDidLoad() {
@@ -85,7 +74,7 @@ class UniversityViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         self.setNeedsStatusBarAppearanceUpdate()
-     observeQuery()
+        observeQuery()
     }
        
     override func viewWillDisappear(_ animated: Bool) {
@@ -94,8 +83,8 @@ class UniversityViewController: UIViewController {
         }
        
     func setup() {
-        universityTableView.delegate = self
-        universityTableView.dataSource = self
+        countryTableView.delegate = self
+        countryTableView.dataSource = self
     
         query = baseQuery()
         
@@ -106,33 +95,33 @@ class UniversityViewController: UIViewController {
     }
 }
 
-extension UniversityViewController: UITableViewDelegate {
+extension CountryViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
         let cell =  tableView.cellForRow(at: indexPath)
         cell?.accessoryType = .checkmark
         
-        let university = universities[indexPath.row]
-        self.delegate?.fetchUniversity(university: university)
+        let country = countries[indexPath.row]
+        self.delegate?.fetchCountry(country: country)
         self.dismiss(animated: true, completion: nil)
  
     }
     
 }
 
-extension UniversityViewController: UITableViewDataSource {
+extension CountryViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-         return universities.count
+         return countries.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         let cell = UITableViewCell(style: .default, reuseIdentifier: "cell")
     
-        let university = universities[indexPath.row]
-        cell.textLabel?.text = university.name
+        let country = countries[indexPath.row]
+        cell.textLabel?.text = country.name
         return cell
         
     }

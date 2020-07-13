@@ -86,22 +86,14 @@ class ProfileViewController: UIViewController, UINavigationControllerDelegate, U
             firstLabel.text = userAuth.nameComplete
             emailLabel.text = userAuth.email
             
-            UniversityAPI.shared.get(documentID: userAuth.university) { result in
-                switch result {
-                    case .success(let document):
-                    
-                        if let university = University(dictionary: document.data()!){
-                            
-                            self.university = university
-                            self.universityLabel.text = university.name
-                            
-                            let url = URL(string: university.imagePath)
-                            self.universityImageView.kf.setImage(with: url, placeholder: UIImage(named: "profile_2_background"))
-                        }
-                    
-                    case .failure(let error):
-                        print(error)
-                }
+            if let university = AuthenticationManager.shared.currentUniversity {
+                
+                self.university = university
+                self.universityLabel.text = university.name
+                
+                let url = URL(string: university.imagePath)
+                self.universityImageView.kf.setImage(with: url, placeholder: UIImage(named: "profile_2_background"))
+                
             }
             
             

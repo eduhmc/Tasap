@@ -23,11 +23,15 @@ struct UniversityAPI: UniversityCrudOption {
     
     func get(documentID: String, completion: @escaping (Result<DocumentSnapshot, CrudError>) -> ()) {
         
-        let docRef = Firestore.firestore().collection("universities").document(documentID)
+        let docRef = Firestore.firestore().collectionGroup("universities").whereField("id", isEqualTo: documentID)
                          
-        docRef.getDocument { (document, error) in
-            if let document = document, document.exists {
-                completion(.success(document))
+        docRef.getDocuments { (snapshot, error) in
+            guard let snapshot = snapshot else {
+              print("Error fetching snapshot results: \(error!)")
+              return
+            }
+            if snapshot.documents.count > 0 {
+                completion(.success(snapshot.documents[0]))
             } else {
                 completion(.failure(CrudError(message:"Document does not exist")))
             }
