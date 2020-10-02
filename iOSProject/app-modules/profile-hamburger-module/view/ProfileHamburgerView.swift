@@ -2,11 +2,12 @@
 //  ProfileHamburgerView.swift
 //  iOSProject
 //
-//  Created by everis on 8/18/20.
-//  Copyright © 2020 Eduardo Huerta. All rights reserved.
+//  Created by Eduardo Huerta-Mercado on 8/18/20.
+//  Copyright © 2020 Eduardo Huerta-Mercado. All rights reserved.
 //
 
 import UIKit
+import Instructions
 
 class ProfileHamburgerView: UIViewController, ProfileHamburgerPresenterToViewProtocol {
     
@@ -21,23 +22,48 @@ class ProfileHamburgerView: UIViewController, ProfileHamburgerPresenterToViewPro
     @IBOutlet weak var logoutButton: UIButton!
     
     var presenter: ProfileHamburgerViewToPresenterProtocol?
+    var coachMarksController = CoachMarksController()
+    weak var snapshotDelegate: CoachMarksControllerDelegate?
+    
+    var model:ProfileHamburgerModel?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         presenter?.loadData()
+        
+        self.coachMarksController.dataSource = self
+        self.coachMarksController.delegate = self
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        presenter?.loadData()
+        
+        if !UserDefaultManager.shared.isFirstProfile && UserDefaultManager.shared.isFirstHamburgerProfile && !sideMenuController!.isMenuRevealed {
+            startInstructions()
+            UserDefaultManager.shared.isFirstHamburgerProfile = false
+        }
+        
+    }
     func showData(model: ProfileHamburgerModel) {
+        self.model = model
         
-        let url = URL(string: AuthenticationManager.shared.currentUser!.imagePath)
-        userImageView.kf.setImage(with: url)
-        userImageView.makeRounded()
-        
+        if model.userAuth.imagePath.count > 0 {
+            let url = URL(string: AuthenticationManager.shared.currentUser!.imagePath)
+            userImageView.kf.setImage(with: url)
+            userImageView.makeRounded()
+        }else{
+            userImageView.setImageForName(model.userAuth.first, circular: true, textAttributes: nil)
+        }
+   
         nameLabel.text = "\(model.userAuth.first) \(model.userAuth.last)"
         
         calendarButton.isHidden = model.isHiddenCalendar
         tutorDetailButton.isHidden = model.isHiddenTutorDetail
-        //courseListButton.isHidden = model.isHiddenCourseList
+        courseListButton.isHidden = model.isHiddenCourseList
+        
+        updateCourseListButton.setTitle(model.updateCourseListButtonText, for: .normal)
         updateCourseListButton.isHidden = model.isHiddenUpdateCourseList
     }
     

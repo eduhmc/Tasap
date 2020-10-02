@@ -2,8 +2,8 @@
 //  ChatsViewController.swift
 //  iOSProject
 //
-//  Created by Roger Arroyo on 5/29/20.
-//  Copyright © 2020 Eduardo Huerta. All rights reserved.
+//  Created by Eduardo Huerta-Mercado on 5/29/20.
+//  Copyright © 2020 Eduardo Huerta-Mercado. All rights reserved.
 //
 
 import Foundation
@@ -32,6 +32,8 @@ class ChatsViewController: UIViewController {
     }()
 
     var userAuth: User?
+    
+    var chatsNoRead:[String] = []
     
     private var chats: [Chat] = [] {
         didSet{
@@ -186,6 +188,12 @@ extension ChatsViewController: UITableViewDelegate {
         let destinationVC = ChatViewController()
         
         if let userGuest = chat.userGuest {
+        AuthenticationManager.shared.currentUser?.document?.collection("chats").document(userGuest.document!.documentID).updateData([
+                "count": 0
+            ])
+            
+            chatsNoRead = chatsNoRead.filter { $0 != userGuest.document!.documentID }
+            
             destinationVC.user2Name = "\(userGuest.first) \(userGuest.last)"
             destinationVC.user2UID = userGuest.document?.documentID
             destinationVC.user2ImgUrl = userGuest.imagePath
@@ -221,7 +229,8 @@ extension ChatsViewController: UITableViewDataSource {
             chat = usersChats[indexPath.row]
         }
         
-        cell.setup(chat: chat)
+        let isNoRead = chatsNoRead.contains(chat.userGuest!.document!.documentID)
+        cell.setup(chat: chat, isNoRead: isNoRead)
         return cell
         
     }

@@ -2,15 +2,15 @@
 //  RegisterDetailViewController.swift
 //  iOSProject
 //
-//  Created by Roger Arroyo on 4/17/20.
-//  Copyright © 2020 Eduardo Huerta. All rights reserved.
+//  Created by Eduardo Huerta-Mercado on 4/17/20.
+//  Copyright © 2020 Eduardo Huerta-Mercado. All rights reserved.
 //
 
 import UIKit
 import PopupDialog
 
 class RegisterDetailViewController: UIViewController {
-
+    
     @IBOutlet weak var priceLabel: UITextField! {
         didSet {
             self.priceLabel.addDoneCancelToolbar()
@@ -21,7 +21,8 @@ class RegisterDetailViewController: UIViewController {
     @IBOutlet weak var topConstraint: NSLayoutConstraint!
     
     var user: User?
-
+    var isChangePhoto: Bool?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.hideKeyboardWhenTappedAround()
@@ -71,14 +72,15 @@ class RegisterDetailViewController: UIViewController {
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-           
+        
         let user = sender as! User
-
+        
         if segue.identifier == "tutorSegue" {
-           
-           let destinationVC = segue.destination as! RegisterTutorViewController
-           destinationVC.user = user
-           
+            
+            let destinationVC = segue.destination as! RegisterTutorViewController
+            destinationVC.user = user
+            destinationVC.isChangePhoto = self.isChangePhoto
+            
         }
     }
     

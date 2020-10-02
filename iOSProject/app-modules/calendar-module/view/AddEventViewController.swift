@@ -2,8 +2,8 @@
 //  AddEventViewController.swift
 //  iOSProject
 //
-//  Created by Roger Arroyo on 5/13/20.
-//  Copyright © 2020 Eduardo Huerta. All rights reserved.
+//  Created by Eduardo Huerta-Mercado on 5/13/20.
+//  Copyright © 2020 Eduardo Huerta-Mercado. All rights reserved.
 //
 
 import UIKit
@@ -11,7 +11,7 @@ import CalendarKit
 import Instructions
 
 protocol AddEventControllerDelegate: AnyObject {
-    func newEvent(event: Eveent?)
+    func newEvent(event: Eveent?, re: String?, fo: String?)
     func editEvent(event: Eveent?)
     func deleteEvent(event: Eveent?)
 }
@@ -20,11 +20,16 @@ class AddEventViewController: UIViewController {
 
     @IBOutlet weak var stateLabel: UILabel!
     @IBOutlet weak var stateSwitch: UISwitch!
-    @IBOutlet weak var allDaySwitch: UISwitch!
     @IBOutlet weak var startDateLabel: UILabel!
     @IBOutlet weak var endDateLabel: UILabel!
     @IBOutlet weak var eventButton: UIButton!
     @IBOutlet weak var deleteEventButton: UIButton!
+    
+    @IBOutlet weak var repeatSwitch: UISwitch!
+    @IBOutlet weak var repeatView: UIView!
+    @IBOutlet weak var repeatLabel: UILabel!
+    @IBOutlet weak var forLabel: UILabel!
+    
     
     // MARK: - Public properties
     var coachMarksController = CoachMarksController()
@@ -38,6 +43,9 @@ class AddEventViewController: UIViewController {
     weak var dayView: DayView?
     var event: Eveent?
     
+    var repit: String?
+    var ford: String?
+
     var startDateClick = false
     var endDateClick = false
     
@@ -96,7 +104,6 @@ class AddEventViewController: UIViewController {
             
             startDate = event.startDate
             endDate = event.endDate
-            allDaySwitch.isOn = event.allDay
             eventButton.setTitle("Edit Event", for: .normal)
             deleteEventButton.isHidden = false
             
@@ -129,6 +136,20 @@ class AddEventViewController: UIViewController {
         }
     }
     
+    @IBAction func repeatSwitchTapped(_ sender: Any) {
+        if repeatSwitch.isOn {
+            repeatView.isHidden = false
+            repit = "All Days"
+            ford = "1 Month"
+            repeatLabel.text = repit
+            forLabel.text = ford
+        }else{
+            repeatView.isHidden = true
+            repit = nil
+            ford = nil
+        }
+    }
+    
     
     @IBAction func startDateButtonTapped(_ sender: Any) {
         startDateClick = true
@@ -141,6 +162,17 @@ class AddEventViewController: UIViewController {
         presentDatePicker(date: endDate!)
     }
     
+    @IBAction func repeatButtonTapped(_ sender: Any) {
+        
+        let storyboard = UIStoryboard.init(name: "Calendar", bundle: nil)
+        let vc = storyboard.instantiateViewController(withIdentifier: "RepeatView") as! RepeatView
+        vc.delegate = self
+        let navC = UINavigationController(rootViewController: vc)
+        navigationController?.present(navC, animated: true, completion: nil)
+        
+        
+    }
+    
     @IBAction func addEventTapped(_ sender: Any) {
         
         guard let title = stateSwitch.isOn ? "FREE" : "BUSY",
@@ -149,7 +181,7 @@ class AddEventViewController: UIViewController {
             return
         }
 
-        let allDay = allDaySwitch.isOn
+        let allDay = false
         
         if var event = event {
             event.title = title
@@ -160,7 +192,7 @@ class AddEventViewController: UIViewController {
             delegate?.editEvent(event: event)
         }else{
             event = Eveent(title: title, location: "", startDate: startDate, endDate: endDate,allDay: allDay)
-            delegate?.newEvent(event: event)
+            delegate?.newEvent(event: event, re: repit, fo: ford)
         }
         
         navigationController?.popViewController(animated: true)
@@ -172,6 +204,21 @@ class AddEventViewController: UIViewController {
         navigationController?.popViewController(animated: true)
     }
 
+}
+
+extension AddEventViewController: RepeatViewDelegate {
+    
+    func repeatOption(re: String?, fo: String?) {
+        
+        self.repit = re
+        self.ford = fo
+        
+        if let repit = re, let ford = fo {
+            repeatLabel.text = repit
+            forLabel.text = ford
+        }
+        
+    }
 }
 
 extension AddEventViewController: DatePickerControllerDelegate {

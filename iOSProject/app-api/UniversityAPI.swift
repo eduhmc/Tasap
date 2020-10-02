@@ -2,8 +2,8 @@
 //  UniversityAPI.swift
 //  iOSProject
 //
-//  Created by Roger Arroyo on 6/1/20.
-//  Copyright © 2020 Eduardo Huerta. All rights reserved.
+//  Created by Eduardo Huerta-Mercado on 6/1/20.
+//  Copyright © 2020 Eduardo Huerta-Mercado. All rights reserved.
 //
 
 import Foundation
@@ -41,6 +41,5 @@ struct UniversityAPI: UniversityCrudOption {
     func delete(documentID: String) {
         
     }
-    
     
 }

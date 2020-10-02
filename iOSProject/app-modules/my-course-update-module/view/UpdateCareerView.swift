@@ -1,27 +1,32 @@
 //
-//  UpdateCareerViewController.swift
+//  UpdateCareerView.swift
 //  iOSProject
 //
-//  Created by Roger Arroyo on 4/26/20.
-//  Copyright © 2020 Eduardo Huerta. All rights reserved.
+//  Created by Eduardo Huerta-Mercado on 4/26/20.
+//  Copyright © 2020 Eduardo Huerta-Mercado. All rights reserved.
 //
 
 import UIKit
 import FirebaseFirestore
 import PopupDialog
 import FirebaseStorage
+import Instructions
 
 protocol UpdateCareerDelegate: class {
     func fetchUser(user: User)
 }
 
 class UpdateCareerView: UIViewController {
-
+    
     @IBOutlet weak var careerTableView: UITableView!
     
-    var user: User {
-        AuthenticationManager.shared.currentUser!
-    }
+    var coachMarksController = CoachMarksController()
+    weak var snapshotDelegate: CoachMarksControllerDelegate?
+    
+    var updateCareerSectionText = "In this section you can update the courses you want to tutor"
+    let nextButtonText = "Ok!"
+    
+    var user: User?
     
     var isModifyCourses = false
     
@@ -95,6 +100,7 @@ class UpdateCareerView: UIViewController {
         super.viewDidLoad()
         self.setup()
         
+        self.user = AuthenticationManager.shared.currentUser!
         let backButton = UIBarButtonItem(title: "<Back", style: .plain, target: self, action: #selector(goBack(sender:)))
         self.navigationItem.leftBarButtonItem = backButton
     }
@@ -103,6 +109,16 @@ class UpdateCareerView: UIViewController {
       super.viewWillAppear(animated)
       self.setNeedsStatusBarAppearanceUpdate()
       observeQuery()
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+
+        if UserDefaultManager.shared.isFirstUpdateCareer {
+            startInstructions()
+            UserDefaultManager.shared.isFirstUpdateCareer = false
+        }
+        
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -117,6 +133,9 @@ class UpdateCareerView: UIViewController {
         careerTableView.delegate = self
         careerTableView.dataSource = self
         query = baseQuery()
+        
+        self.coachMarksController.dataSource = self
+        self.coachMarksController.delegate = self
     }
     
     @objc func goBack(sender: UIBarButtonItem)
@@ -150,7 +169,7 @@ class UpdateCareerView: UIViewController {
     
     @IBAction func updateButtonTapped(_ sender: UIButton) {
         
-        self.updateUser(user: self.user)
+        self.updateUser(user: self.user!)
     }
 
     func updateUser(user: User){
@@ -247,7 +266,7 @@ extension UpdateCareerView: UITableViewDataSource {
 extension UpdateCareerView: UpdateCareerDelegate {
     func fetchUser(user: User) {
         isModifyCourses = true
-        AuthenticationManager.shared.currentUser = user
+        self.user = user
     }
     
     

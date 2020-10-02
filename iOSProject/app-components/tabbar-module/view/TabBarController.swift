@@ -2,8 +2,8 @@
 //  TabBarController.swift
 //  iOSProject
 //
-//  Created by everis on 8/18/20.
-//  Copyright © 2020 Eduardo Huerta. All rights reserved.
+//  Created by Eduardo Huerta-Mercado on 8/18/20.
+//  Copyright © 2020 Eduardo Huerta-Mercado. All rights reserved.
 //
 
 import UIKit
@@ -23,12 +23,34 @@ class TabBarController: UITabBarController {
         homeNC.navigationBar.tintColor = UIColor.white
         homeNC.navigationBar.prefersLargeTitles = true
         homeNC.navigationBar.isTranslucent = true
-        homeNC.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white]
- 
+        let homeTextAttributes = [NSAttributedString.Key.foregroundColor:UIColor.white]
+        homeNC.navigationBar.titleTextAttributes = homeTextAttributes
+        homeNC.navigationBar.largeTitleTextAttributes = homeTextAttributes
         
-        let profileSB = UIStoryboard.init(name: "Profile", bundle: nil)
+        /*let profileSB = UIStoryboard.init(name: "Profile", bundle: nil)
         let profileSM = profileSB.instantiateViewController(withIdentifier: "SideMenu") as! SideMenuController
         
+        profileSM.tabBarItem = UITabBarItem(title: "Profile", image: UIImage(systemName: "person.crop.circle.fill"), tag: 1)*/
+        
+        //MARK: PROFILE
+        let profileSB = UIStoryboard.init(name: "Profile", bundle: nil)
+        let profileVC = profileSB.instantiateViewController(withIdentifier: "ProfileView") as! ProfileViewController
+        
+        let profileNC = UINavigationController(rootViewController: profileVC)
+        profileNC.navigationBar.barTintColor =  UIColor(hexString: "0B516E", alpha: 0.5)
+        profileNC.navigationBar.tintColor = UIColor.white
+        profileNC.navigationBar.prefersLargeTitles = true
+        profileNC.navigationBar.isTranslucent = true
+        let profileTextAttributes = [NSAttributedString.Key.foregroundColor:UIColor.white]
+        profileNC.navigationBar.titleTextAttributes = profileTextAttributes
+        profileNC.navigationBar.largeTitleTextAttributes = profileTextAttributes
+        
+
+        let profileHamburgerVC = profileSB.instantiateViewController(withIdentifier: "MenuNavigation") as! ProfileHamburgerView
+        ProfileHamburgerRouter.createProfileHamburgerModule(view: profileHamburgerVC, parent: profileVC)
+        
+        let profileSM = SideMenuController(contentViewController: profileNC, menuViewController: profileHamburgerVC)
+        profileSM.extendedLayoutIncludesOpaqueBars = true
         profileSM.tabBarItem = UITabBarItem(title: "Profile", image: UIImage(systemName: "person.crop.circle.fill"), tag: 1)
         
         SideMenuController.preferences.basic.position = .sideBySide
@@ -37,6 +59,7 @@ class TabBarController: UITabBarController {
         SideMenuController.preferences.basic.direction = .right
         
         
+       
         let tabBarList = [homeNC, profileSM]
         
         self.setup()

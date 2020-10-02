@@ -2,8 +2,8 @@
 //  ProfileViewController.swift
 //  iOSProject
 //
-//  Created by Roger Arroyo on 4/9/20.
-//  Copyright © 2020 Eduardo Huerta. All rights reserved.
+//  Created by Eduardo Huerta-Mercado on 4/9/20.
+//  Copyright © 2020 Eduardo Huerta-Mercado. All rights reserved.
 //
 
 import UIKit
@@ -21,25 +21,29 @@ class ProfileViewController: UIViewController, UINavigationControllerDelegate, U
     @IBOutlet weak var emailLabel: UILabel!
     @IBOutlet weak var userImageView: UIImageView!
     @IBOutlet weak var universityLabel: UILabel!
-    @IBOutlet weak var userButton: UIButton!
     @IBOutlet weak var universityImageView: UIImageView!
-    
-    @IBOutlet weak var calendarButton: UIBarButtonItem!
-    
     
     // MARK: - Public properties
     var university: University?
     var coachMarksController = CoachMarksController()
     
     let profileSectionText = "You are in the profile section, where you can review all your information."
-    let avatarText = "That’s your profile picture. You look amazing!"
-    let moreButtonText = " Here you can check more of your tutor information."
     let nextButtonText = "Ok!"
     
     weak var snapshotDelegate: CoachMarksControllerDelegate?
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        let button = UIButton(type: UIButton.ButtonType.custom)
+        button.setImage(UIImage(named: "hamburger_menu"), for: .normal)
+        button.imageView?.contentMode = .scaleAspectFit
+        button.addTarget(self, action:#selector(hamburgerButtonTapped), for: .touchDragInside)
+        button.frame = CGRect(x: 0, y: 0, width: 30, height: 30)
+        let barButton = UIBarButtonItem(customView: button)
+        self.navigationItem.rightBarButtonItems = [barButton]
+        
+     
         setup()
     }
     
@@ -52,11 +56,8 @@ class ProfileViewController: UIViewController, UINavigationControllerDelegate, U
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
 
-        if let userAuth = AuthenticationManager.shared.currentUser {
-            if UserDefaultManager.shared.isFirstProfile && userAuth.isTutor{
-                startInstructions()
-                UserDefaultManager.shared.isFirstProfile = false
-            }
+        if UserDefaultManager.shared.isFirstProfile{
+            startInstructions()
         }
         
     }
@@ -69,18 +70,9 @@ class ProfileViewController: UIViewController, UINavigationControllerDelegate, U
 
     func setup(){
         
-        //MARK: Init
-        title = "Profile"
-        
         //MARK: Instructions Setup
         self.coachMarksController.dataSource = self
         self.coachMarksController.delegate = self
-        
-        /*let skipView = CoachMarkSkipDefaultView()
-        skipView.setTitle("Skip", for: .normal)
-
-        self.coachMarksController.skipView = skipView
-        */
         
         if let userAuth = AuthenticationManager.shared.currentUser {
             
@@ -97,24 +89,14 @@ class ProfileViewController: UIViewController, UINavigationControllerDelegate, U
                 
             }
             
-            if userAuth.isTutor {
-                calendarButton.isEnabled = false
+            if userAuth.imagePath.count > 0 {
+                let url = URL(string: userAuth.imagePath)
+                userImageView.kf.setImage(with: url)
+                userImageView.makeRounded()
             }else{
-                calendarButton.isEnabled = true
+                userImageView.setImageForName(userAuth.first, circular: true, textAttributes: nil)
             }
-            
-            
-            let url = URL(string: userAuth.imagePath)
-            userImageView.kf.setImage(with: url)
-            
-            userImageView.makeRounded()
-            
-            if userAuth.isTutor {
-                userButton.setTitle("More Info", for: .normal)
-            }else{
-                userButton.setTitle("I want to be a tutor", for: .normal)
-            }
-
+           
         }
    
     }
@@ -122,60 +104,9 @@ class ProfileViewController: UIViewController, UINavigationControllerDelegate, U
     func startInstructions() {
         coachMarksController.start(in: .window(over: self))
     }
-
-    @IBAction func logoutButtonTapped(_ sender: UIBarButtonItem) {
-        
-        if let loginVC = UIStoryboard(name: "Main", bundle: nil).instantiateInitialViewController() {
-            
-            AuthenticationManager.shared.logout() { [weak self] result in
-                
-                guard let strongSelf = self else {
-                    return
-                }
-                
-                switch result {
-                case .success(let bool):
-                    
-                    if bool {
-                        
-                        let ud = UserDefaults.standard
-                        ud.removeObject(forKey: "currentUser")
-                        
-                        loginVC.modalPresentationStyle = .fullScreen
-                        strongSelf.present(loginVC, animated: true, completion: nil)
-                    }
-                    
-                case .failure(let error):
-                    strongSelf.popupShow(message: error.message)
-                }
-                
-            }
-
-        }
-    }
     
-    @IBAction func calendarButtonTapped(_ sender: UIBarButtonItem) {
-        
-        if let userAuth = AuthenticationManager.shared.currentUser {
-            
-            let storyboard = UIStoryboard.init(name: "Calendar", bundle: nil)
-            let vc = storyboard.instantiateViewController(withIdentifier: "CalendarView") as! CalendarView
-            
-            let calendarModel = CalendarModel(isOnlyView: true, user: userAuth, course: nil)
-            
-            CalendarRouter.createCalendarModule(view: vc, model: calendarModel)
-            vc.modalPresentationStyle = .automatic
-            self.navigationController?.pushViewController(vc, animated: true)
-            
-        }
-        
-        
-    }
-    
-    @IBAction func userButtonTapped(_ sender: Any) {
-        if let userAuth = AuthenticationManager.shared.currentUser {
-            performSegue(withIdentifier: "profileDetailSegue", sender: userAuth)
-        }
+    @objc func hamburgerButtonTapped() {
+        self.sideMenuController?.revealMenu()
     }
     
     @IBAction func imageUpdateButtonTapped(_ sender: Any) {
@@ -187,7 +118,7 @@ class ProfileViewController: UIViewController, UINavigationControllerDelegate, U
 
     }
     
-    @IBAction func nameUpdateButtonTapped(_ sender: Any) {
+    @IBAction func namUpdateButtonTapped(_ sender: Any) {
         showNameDialog()
     }
     
@@ -314,20 +245,6 @@ class ProfileViewController: UIViewController, UINavigationControllerDelegate, U
         
     }
     
-    
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-              
-        if segue.identifier == "profileDetailSegue" {
-
-            let userAuth = sender as! User
-            let destinationVC = segue.destination as! ProfileDetailViewController
-            destinationVC.user = userAuth
-            destinationVC.university = university
-
-        }
-
-    }
-    
 }
 
 // MARK: Protocol Conformance | CoachMarksControllerDelegate
@@ -404,10 +321,6 @@ extension ProfileViewController: CoachMarksControllerDataSource {
                     return UIBezierPath(rect: frame)
                 }
             )
-        case 1:
-            return coachMarksController.helper.makeCoachMark(for: self.userImageView)
-        case 2:
-            return coachMarksController.helper.makeCoachMark(for: self.userButton)
         default:
             return coachMarksController.helper.makeCoachMark()
         }
@@ -426,12 +339,6 @@ extension ProfileViewController: CoachMarksControllerDataSource {
         case 0:
             coachViews.bodyView.hintLabel.text = self.profileSectionText
             coachViews.bodyView.nextLabel.text = self.nextButtonText
-        case 1:
-            coachViews.bodyView.hintLabel.text = self.avatarText
-            coachViews.bodyView.nextLabel.text = self.nextButtonText
-        case 2:
-            coachViews.bodyView.hintLabel.text = self.moreButtonText
-            coachViews.bodyView.nextLabel.text = self.nextButtonText
             coachViews.bodyView.nextControl?.addTarget(self, action: #selector(moreInfo), for: .touchUpInside)
         default: break
         }
@@ -441,9 +348,9 @@ extension ProfileViewController: CoachMarksControllerDataSource {
     }
 
     @objc func moreInfo(){
-        if let userAuth = AuthenticationManager.shared.currentUser {
-            performSegue(withIdentifier: "profileDetailSegue", sender: userAuth)
-        }
+        coachMarksController.stop(immediately: true)
+        sideMenuController?.revealMenu()
+        UserDefaultManager.shared.isFirstProfile = false
     }
     
 }

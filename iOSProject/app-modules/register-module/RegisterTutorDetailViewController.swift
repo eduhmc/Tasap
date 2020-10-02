@@ -2,8 +2,8 @@
 //  RegisterTutorDetailViewController.swift
 //  iOSProject
 //
-//  Created by Roger Arroyo on 4/11/20.
-//  Copyright © 2020 Eduardo Huerta. All rights reserved.
+//  Created by Eduardo Huerta-Mercado on 4/11/20.
+//  Copyright © 2020 Eduardo Huerta-Mercado. All rights reserved.
 //
 
 import UIKit
@@ -124,6 +124,11 @@ class RegisterTutorDetailViewController: UIViewController {
 
     deinit {
         listener?.remove()
+    }
+    
+    @IBAction func createAccountButton(_ sender: Any) {
+        delegate?.registerUser(user: self.user!)
+        _ = navigationController?.popViewController(animated: true)
     }
     
     func filterContentForSearchText(searchText: String){

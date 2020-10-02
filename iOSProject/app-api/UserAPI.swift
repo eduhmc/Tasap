@@ -2,8 +2,8 @@
 //  UserManager.swift
 //  iOSProject
 //
-//  Created by Roger Arroyo on 5/30/20.
-//  Copyright © 2020 Eduardo Huerta. All rights reserved.
+//  Created by Eduardo Huerta-Mercado on 5/30/20.
+//  Copyright © 2020 Eduardo Huerta-Mercado. All rights reserved.
 //
 
 import Foundation
@@ -26,8 +26,6 @@ class UserAPI: UserCrudOption {
     static let shared = UserAPI()
 
     func add(user: User) {
-        
-        
         
     }
     
@@ -86,28 +84,31 @@ extension UserAPI: AuthenticationProtocol {
             
             if !userAuth.isEmailVerified {
                 completion(.failure(AuthenticationError(message: "Please verify your email before continuing")))
-            }
-            
-            let docRef = Firestore.firestore().collection("users").document(userAuth.uid)
-                   
-            docRef.getDocument { (document, error) in
-                if let document = document, document.exists {
+            }else {
+                
+                let docRef = Firestore.firestore().collection("users").document(userAuth.uid)
+                       
+                docRef.getDocument { (document, error) in
+                    if let document = document, document.exists {
 
-                    let user = User(dictionary: document.data()!)
+                        let user = User(dictionary: document.data()!)
 
-                    if var user = user {
-                        user.document = document.reference
-                        user.credentials = credentials
-                        completion(.success(user))
-                    }else{
-                        completion(.failure(AuthenticationError(message: "Error parsing Document")))
+                        if var user = user {
+                            user.document = document.reference
+                            user.credentials = credentials
+                            completion(.success(user))
+                        }else{
+                            completion(.failure(AuthenticationError(message: "Error parsing Document")))
+                        }
+                        
+                        
+                    } else {
+                        completion(.failure(AuthenticationError(message: "Document does not exist")))
                     }
-                    
-                    
-                } else {
-                    completion(.failure(AuthenticationError(message: "Document does not exist")))
                 }
+                
             }
+
         }
         
     }

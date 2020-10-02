@@ -2,8 +2,8 @@
 //  ProfileHamburgerRouter.swift
 //  iOSProject
 //
-//  Created by everis on 8/24/20.
-//  Copyright © 2020 Eduardo Huerta. All rights reserved.
+//  Created by Eduardo Huerta-Mercado on 8/24/20.
+//  Copyright © 2020 Eduardo Huerta-Mercado. All rights reserved.
 //
 
 import UIKit
@@ -50,12 +50,20 @@ class ProfileHamburgerRouter: ProfileHamburgerPresenterToRouterProtocol {
     
     func pushToCoursesListModule(fromView: UIViewController) {
         
+        let storyboard = UIStoryboard.init(name: "MyCourses", bundle: nil)
+        let vc = storyboard.instantiateViewController(withIdentifier: "MyCoursesView") as! MyCoursesView
+        
+        MyCoursesRouter.createMyCoursesModule(view: vc)
+        
+        fromView.navigationController?.pushViewController(vc, animated: true)
+        fromView.sideMenuController?.hideMenu()
+
     }
     
     func pushToUpdateCoursesListModule(fromView: UIViewController) {
         
         let storyboard = UIStoryboard.init(name: "Course", bundle: nil)
-        let vc = storyboard.instantiateViewController(withIdentifier: "UpdateCareerView") as! UpdateCareerViewController
+        let vc = storyboard.instantiateViewController(withIdentifier: "UpdateCareerView") as! UpdateCareerView
         
         fromView.navigationController?.pushViewController(vc, animated: true)
         fromView.sideMenuController?.hideMenu()

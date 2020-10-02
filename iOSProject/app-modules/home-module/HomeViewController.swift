@@ -2,8 +2,8 @@
 //  HomeViewController.swift
 //  iOSProject
 //
-//  Created by Roger Arroyo on 4/2/20.
-//  Copyright © 2020 Eduardo Huerta. All rights reserved.
+//  Created by Eduardo Huerta-Mercado on 4/2/20.
+//  Copyright © 2020 Eduardo Huerta-Mercado. All rights reserved.
 //
 
 import UIKit
@@ -20,6 +20,24 @@ class HomeViewController: UIViewController {
     
     private var careers: [Career] = [] {
         didSet {
+            
+            /*for career in careers {
+                
+                career.document?.reference.collection("courses")
+                    .getDocuments() { (querySnapshot, err) in
+                        if let err = err {
+                            print("Error getting documents: \(err)")
+                        } else {
+                            for document in querySnapshot!.documents {
+                               
+                                document.reference.updateData([
+                                    "id": document.documentID
+                                ])
+                            }
+                        }
+                }
+                
+            }*/
 
             let firstLetters = careers.map { $0.nameFirstLetter }
             let uniqueFirstLetters = Array(Set(firstLetters))

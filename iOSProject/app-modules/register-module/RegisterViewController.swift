@@ -2,8 +2,8 @@
 //  RegisterViewController.swift
 //  iOSProject
 //
-//  Created by Roger Arroyo on 4/11/20.
-//  Copyright © 2020 Eduardo Huerta. All rights reserved.
+//  Created by Eduardo Huerta-Mercado on 4/11/20.
+//  Copyright © 2020 Eduardo Huerta-Mercado. All rights reserved.
 //
 
 import UIKit
@@ -11,6 +11,7 @@ import FirebaseFirestore
 import PopupDialog
 import FirebaseStorage
 import FirebaseAuth
+import InitialsImageView
 
 enum RegisterState {
     case unnowError
@@ -32,7 +33,7 @@ protocol RegisterDelegate: class {
 }
 
 class RegisterViewController: UIViewController {
-
+    
     @IBOutlet weak var firstNameLabel: UITextField!
     @IBOutlet weak var lastNameLabel: UITextField!
     @IBOutlet weak var emailLabel: UITextField!
@@ -48,13 +49,15 @@ class RegisterViewController: UIViewController {
     
     private var university: University?
     private var country: Country?
+    private var isChangePhoto = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.hideKeyboardWhenTappedAround() 
-        userImageView.makeRounded()
+        self.hideKeyboardWhenTappedAround()
+        userImageView.setImageForName("User", circular: true, textAttributes: nil)
+        
     }
- 
+    
     @IBAction func registerButtonTapped(_ sender: UIButton) {
         
         var error = ""
@@ -93,8 +96,8 @@ class RegisterViewController: UIViewController {
         case .countryEmpty:
             error = "Please complete Country"
             popupShow(message: error)
-        break
-
+            break
+            
         case .universityEmpty:
             error = "Please complete University"
             popupShow(message: error)
@@ -102,7 +105,7 @@ class RegisterViewController: UIViewController {
         case .succes(let user):
             registerUser(user: user)
             break
-        
+            
         }
         
     }
@@ -146,13 +149,13 @@ class RegisterViewController: UIViewController {
             return .emailFormatError
         }
         
-        if let university = self.university, university.domain != "" {
-            if !emailUser.contains("@\(university.domain)") {
+        /*if let university = self.university, university.domain != "" {
+            if !emailUser.contains("@\(university.domain)") && university.domain != "none"{
                 return .emailDomainError(domain: university.domain)
             }
         }else{
             return .universityEmpty
-        }
+        }*/
         
         if let password = passwordLabel.text, password != "" {
             passwordUser = password
@@ -165,8 +168,8 @@ class RegisterViewController: UIViewController {
         }else{
             return .passwordMinimun
         }
- 
-        if firstName != "" && lastName != "" && emailUser != ""  && passwordUser != ""{
+        
+        if firstName != "" && lastName != "" && emailUser != ""  && passwordUser != "" {
             
             var user = User(first: firstName, last: lastName, description: "To start to be a tutor, please edit your price, description and courses.", email: emailUser, password: passwordUser,imagePath: "", price:"0.0", ratingNumber: 1, ratingAverage: 5, courses: ["00000000000000000000"], university: universityCode, fcmToken: ".", country: countryCode)
             user.image = userImageView
@@ -194,72 +197,111 @@ class RegisterViewController: UIViewController {
                 }
                 print("\(userAuth.email!) created")
                 
-                let imageName = UUID().uuidString
-                let storageRef = Storage.storage().reference().child("profile_images").child("\(imageName).jpg")
-
-                if let uploadData = self.userImageView.image?.jpegData(compressionQuality: 0.1) {
-                    storageRef.putData(uploadData, metadata: nil, completion: { (_, error) in
-                        if let error = error {
-                            self.popupShow(message: error.localizedDescription )
-                            loader.hideLoading()
-                            return
-                        }
-                        storageRef.downloadURL(completion: { (url, error) in
+                var updateUser:User = User(dictionary: user.dictionary)!
+                updateUser.password = "."
+                
+                if self.isChangePhoto {
+                    
+                    let storageRef = Storage.storage().reference().child("profile_images").child("\(userAuth.uid).jpg")
+                    
+                    
+                    if let uploadData = self.userImageView.image?.jpegData(compressionQuality: 0.1) {
+                        storageRef.putData(uploadData, metadata: nil, completion: { (_, error) in
                             if let error = error {
                                 self.popupShow(message: error.localizedDescription )
                                 loader.hideLoading()
                                 return
                             }
-                            guard let photoUrl = url else { return }
-                            
-                            var updateUser:User = User(dictionary: user.dictionary)!
-                            updateUser.password = "."
-                            updateUser.imagePath = photoUrl.absoluteString
-                           
-                            var ref: DocumentReference? = nil
-                            Firestore.firestore().collection("users").document(userAuth.uid).setData(updateUser.dictionary)  { err in
-                                if let err = err {
-                                    print("Error adding document: \(err)")
+                            storageRef.downloadURL(completion: { (url, error) in
+                                if let error = error {
+                                    self.popupShow(message: error.localizedDescription )
                                     loader.hideLoading()
-                                    self.popupShow(message: "Error adding user")
-                                } else {
-                                    ref = Firestore.firestore().collection("users").document(userAuth.uid)
-                                    print("Document added with ID: \(ref!.documentID)")
-                                    updateUser.document = ref
-                                    
-                                    userAuth.sendEmailVerification (completion: { (error) in
-                                        // Notify the user that the mail has sent or couldn't because of an error.
-                                        if let err = err {
-                                            loader.hideLoading()
-                                            print("Error adding document: \(err)")
-                                        }else{
-                                            loader.hideLoading()
-                                            let popup =  PopupDialog(title: "Account Created", message: "Verify your email for login in Tasap app")
-                                            
-                                            let buttonOne = CancelButton(title: "OK") {
-                                                self.dismiss(animated: true, completion: nil)
-                                            }
-                                            
-                                            popup.addButton(buttonOne)
-                                            self.present(popup, animated: true, completion: nil)
-                                            
-                                        }
-                                    })
+                                    return
                                 }
-                            }
-                            
+                                guard let photoUrl = url else { return }
+                                
+                                updateUser.imagePath = photoUrl.absoluteString
+                                
+                                var ref: DocumentReference? = nil
+                                Firestore.firestore().collection("users").document(userAuth.uid).setData(updateUser.dictionary)  { err in
+                                    if let err = err {
+                                        print("Error adding document: \(err)")
+                                        loader.hideLoading()
+                                        self.popupShow(message: "Error adding user")
+                                    } else {
+                                        ref = Firestore.firestore().collection("users").document(userAuth.uid)
+                                        print("Document added with ID: \(ref!.documentID)")
+                                        updateUser.document = ref
+                                        
+                                        userAuth.sendEmailVerification (completion: { (error) in
+                                            // Notify the user that the mail has sent or couldn't because of an error.
+                                            if let err = err {
+                                                loader.hideLoading()
+                                                print("Error adding document: \(err)")
+                                            }else{
+                                                loader.hideLoading()
+                                                let popup =  PopupDialog(title: "Account Created", message: "Verify your email for login in Tasap app")
+                                                
+                                                let buttonOne = CancelButton(title: "OK") {
+                                                    self.dismiss(animated: true, completion: nil)
+                                                }
+                                                
+                                                popup.addButton(buttonOne)
+                                                self.present(popup, animated: true, completion: nil)
+                                                
+                                            }
+                                        })
+                                    }
+                                }
+                                
+                            })
                         })
-                    })
+                    }
+                    
+                }else{
+                    
+                    var ref: DocumentReference? = nil
+                    Firestore.firestore().collection("users").document(userAuth.uid).setData(updateUser.dictionary)  { err in
+                        if let err = err {
+                            print("Error adding document: \(err)")
+                            loader.hideLoading()
+                            self.popupShow(message: "Error adding user")
+                        } else {
+                            ref = Firestore.firestore().collection("users").document(userAuth.uid)
+                            print("Document added with ID: \(ref!.documentID)")
+                            updateUser.document = ref
+                            
+                            userAuth.sendEmailVerification (completion: { (error) in
+                                // Notify the user that the mail has sent or couldn't because of an error.
+                                if let err = err {
+                                    loader.hideLoading()
+                                    print("Error adding document: \(err)")
+                                }else{
+                                    loader.hideLoading()
+                                    let popup =  PopupDialog(title: "Account Created", message: "Verify your email for login in Tasap app")
+                                    
+                                    let buttonOne = CancelButton(title: "OK") {
+                                        self.dismiss(animated: true, completion: nil)
+                                    }
+                                    
+                                    popup.addButton(buttonOne)
+                                    self.present(popup, animated: true, completion: nil)
+                                    
+                                }
+                            })
+                        }
+                    }
                 }
                 
             }
         }
     }
-   
+    
     @IBAction func uploadImageButtonTapped(_ sender: UIButton) {
         
         ImagePickerManager().pickImage(self){ image in
             self.userImageView.image = image
+            self.isChangePhoto = true
         }
         
     }
@@ -276,7 +318,7 @@ class RegisterViewController: UIViewController {
     
     
     @IBAction func universityButtonTapped(_ sender: Any) {
-    
+        
         if self.country != nil {
             self.performSegue(withIdentifier: "universitySegue", sender: nil)
         }else{
@@ -284,7 +326,7 @@ class RegisterViewController: UIViewController {
             popupShow(message: error)
         }
         
-    
+        
     }
     
     
@@ -317,26 +359,27 @@ class RegisterViewController: UIViewController {
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         
         if segue.identifier == "registerDetailSegue" {
-
+            
             let user = sender as! User
             let destinationVC = segue.destination as! RegisterDetailViewController
             destinationVC.user = user
+            destinationVC.isChangePhoto = self.isChangePhoto
             
         }else if segue.identifier == "universitySegue" {
-
+            
             let destinationVC = segue.destination as! UniversityViewController
             destinationVC.delegate = self
             destinationVC.country = self.country
-
+            
         }else if segue.identifier == "countrySegue" {
-
+            
             let destinationVC = segue.destination as! CountryViewController
             destinationVC.delegate = self
-
-        }
             
+        }
+        
     }
-
+    
 }
 
 extension RegisterViewController: UITextFieldDelegate {

@@ -2,8 +2,8 @@
 //  CrudOption.swift
 //  iOSProject
 //
-//  Created by Roger Arroyo on 5/30/20.
-//  Copyright © 2020 Eduardo Huerta. All rights reserved.
+//  Created by Eduardo Huerta-Mercado on 5/30/20.
+//  Copyright © 2020 Eduardo Huerta-Mercado. All rights reserved.
 //
 
 import Foundation

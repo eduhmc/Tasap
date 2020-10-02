@@ -18,6 +18,8 @@ target 'iOSProject' do
   pod 'MessageKit'
   pod 'TweeTextField'
   pod 'Instructions', '~> 2.0.0'
+  pod 'SideMenuSwift'
+  pod 'InitialsImageView'
 
   # Pods for iOSProject
 

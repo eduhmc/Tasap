@@ -2,8 +2,8 @@
 //  UpdateCoursesViewController.swift
 //  iOSProject
 //
-//  Created by Roger Arroyo on 4/26/20.
-//  Copyright © 2020 Eduardo Huerta. All rights reserved.
+//  Created by Eduardo Huerta-Mercado on 4/26/20.
+//  Copyright © 2020 Eduardo Huerta-Mercado. All rights reserved.
 //
 
 import UIKit

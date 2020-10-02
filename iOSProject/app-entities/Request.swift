@@ -2,8 +2,8 @@
 //  Request.swift
 //  iOSProject
 //
-//  Created by Roger Arroyo on 5/20/20.
-//  Copyright © 2020 Eduardo Huerta. All rights reserved.
+//  Created by Eduardo Huerta-Mercado on 5/20/20.
+//  Copyright © 2020 Eduardo Huerta-Mercado. All rights reserved.
 //
 
 import Foundation
@@ -21,6 +21,7 @@ struct Request {
     var course: String
     var state: String
     var message: String
+    var isRead: Bool
     
     var dictionary: [String: Any] {
     return [
@@ -33,11 +34,12 @@ struct Request {
         "requestUserID": requestUserID,
         "course": course,
         "state": state,
-        "message": message
+        "message": message,
+        "isRead": isRead
         ]
     }
     
-    init(title: String, startDate: Date, endDate: Date, allDay: Bool, userID: String, eventID: String, requestUserID: String, course: String, state: String, message: String) {
+    init(title: String, startDate: Date, endDate: Date, allDay: Bool, userID: String, eventID: String, requestUserID: String, course: String, state: String, message: String, isRead: Bool) {
         self.title = title
         self.startDate = startDate
         self.endDate = endDate
@@ -48,6 +50,7 @@ struct Request {
         self.course = course
         self.state = state
         self.message = message
+        self.isRead = isRead
     }
  
     var document: DocumentSnapshot?
@@ -57,6 +60,8 @@ struct Request {
         formater.dateFormat = "yyyy/MM/dd"
         return formater.date(from: "\(startDate.year)/\(startDate.month)/\(startDate.day)")!
     }
+    
+    
 
 }
 
@@ -72,9 +77,11 @@ extension Request {
                let requestUserID = dictionary["requestUserID"] as? String,
                let course = dictionary["course"] as? String,
                let state = dictionary["state"] as? String,
-               let message = dictionary["message"] as? String else { return nil }
+               let message = dictionary["message"] as? String,
+               let isRead = dictionary["isRead"] as? Bool else { return nil }
         
-        self.init(title: title, startDate: startDate.dateValue(), endDate: endDate.dateValue(), allDay: allDay, userID: userID, eventID: eventID, requestUserID: requestUserID, course: course, state: state, message: message)
+        self.init(title: title, startDate: startDate.dateValue(), endDate: endDate.dateValue(), allDay: allDay, userID: userID, eventID: eventID, requestUserID: requestUserID, course: course, state: state, message: message, isRead: isRead
+        )
     }
-    
+  
 }

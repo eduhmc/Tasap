@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16097" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15705" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
-        <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15706"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -50,11 +49,21 @@
                                                             <nil key="textColor"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
+                                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="SN5-Us-IaL">
+                                                            <rect key="frame" x="24" y="11" width="60" height="64"/>
+                                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                            <constraints>
+                                                                <constraint firstAttribute="width" constant="60" id="CXu-j9-UDQ"/>
+                                                                <constraint firstAttribute="height" constant="64" id="XSu-rf-i8K"/>
+                                                            </constraints>
+                                                        </view>
                                                     </subviews>
                                                     <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                                                     <constraints>
+                                                        <constraint firstItem="SN5-Us-IaL" firstAttribute="leading" secondItem="uep-DA-sQd" secondAttribute="leading" constant="24" id="5Gr-ya-jfS"/>
                                                         <constraint firstItem="8ff-jt-x8y" firstAttribute="centerY" secondItem="uep-DA-sQd" secondAttribute="centerY" id="IFY-sB-vI2"/>
                                                         <constraint firstAttribute="bottom" secondItem="2yu-bp-Dv9" secondAttribute="bottom" constant="11.5" id="Nhr-LU-OXd"/>
+                                                        <constraint firstItem="SN5-Us-IaL" firstAttribute="top" secondItem="uep-DA-sQd" secondAttribute="top" constant="11" id="PmG-he-MRH"/>
                                                         <constraint firstItem="8ff-jt-x8y" firstAttribute="leading" secondItem="2yu-bp-Dv9" secondAttribute="trailing" constant="8" id="XPA-sR-tdJ"/>
                                                         <constraint firstItem="2yu-bp-Dv9" firstAttribute="top" secondItem="uep-DA-sQd" secondAttribute="top" constant="11.5" id="kYx-AD-K9B"/>
                                                         <constraint firstAttribute="trailing" secondItem="8ff-jt-x8y" secondAttribute="trailing" constant="24" id="vLZ-6y-585"/>
@@ -76,6 +85,7 @@
                                         </tableViewCellContentView>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <connections>
+                                            <outlet property="badgeView" destination="SN5-Us-IaL" id="5DQ-su-wFX"/>
                                             <outlet property="nameLabel" destination="8ff-jt-x8y" id="N9E-aD-OzF"/>
                                             <outlet property="userImageView" destination="2yu-bp-Dv9" id="EPG-W6-fyE"/>
                                         </connections>

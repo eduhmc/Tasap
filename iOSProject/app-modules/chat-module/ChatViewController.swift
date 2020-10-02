@@ -2,8 +2,8 @@
 //  ChatViewController.swift
 //  iOSProject
 //
-//  Created by Roger Arroyo on 5/28/20.
-//  Copyright © 2020 Eduardo Huerta. All rights reserved.
+//  Created by Eduardo Huerta-Mercado on 5/28/20.
+//  Copyright © 2020 Eduardo Huerta-Mercado. All rights reserved.
 //
 
 import InputBarAccessoryView
@@ -152,6 +152,8 @@ class ChatViewController: MessagesViewController {
             let sender = PushNotificationAPI()
             sender.sendPushNotification(to: self.user2FcmToken! , title: "\(userAuth.first) \(userAuth.last)" , body: message.content)
             
+        Firestore.firestore().collection("users").document(self.user2UID!).collection("chats").document(userAuth.document!.documentID).setData(["count": 1], merge: true)
+
         })
     }
     
@@ -171,7 +173,6 @@ class ChatViewController: MessagesViewController {
         messagesCollectionView.reloadData()
         messagesCollectionView.scrollToBottom(animated: true)
     }
-    
     
 }
 

@@ -2,8 +2,8 @@
 //  AddRequestViewController.swift
 //  iOSProject
 //
-//  Created by Roger Arroyo on 5/22/20.
-//  Copyright © 2020 Eduardo Huerta. All rights reserved.
+//  Created by Eduardo Huerta-Mercado on 5/22/20.
+//  Copyright © 2020 Eduardo Huerta-Mercado. All rights reserved.
 //
 
 import UIKit
@@ -16,21 +16,86 @@ class AddRequestViewController: UIViewController {
     var course: Course?
     var event: Eveent?
     
+    var model: CalendarModel?
+    
     @IBOutlet weak var messageTextField: UITextField!
     @IBOutlet weak var startDateLabel: UILabel!
     @IBOutlet weak var endDateLabel: UILabel!
     @IBOutlet weak var sendButton: UIButton!
     
+    @IBOutlet weak var startDateView: UIView!
+    @IBOutlet weak var endDateView: UIView!
+    
+    var startDate: Date? {
+        didSet {
+            
+            let locale = NSLocale.current
+            let formatter : String = DateFormatter.dateFormat(fromTemplate: "j", options:0, locale:locale)!
+            if formatter.contains("a") {
+                //phone is set to 12 hours
+                startDateLabel.text = startDate!.format(with: "dd MMM YYYY HH:mm")
+            } else {
+                //phone is set to 24 hours
+                startDateLabel.text = startDate!.format(with: "dd MMM YYYY HH:mm aa")
+            }
+            
+        }
+    }
+    var endDate: Date? {
+        didSet {
+            
+            let locale = NSLocale.current
+            let formatter : String = DateFormatter.dateFormat(fromTemplate: "j", options:0, locale:locale)!
+            if formatter.contains("a") {
+                //phone is set to 12 hours
+                endDateLabel.text = endDate!.format(with: "dd MMM YYYY HH:mm")
+            } else {
+                //phone is set to 24 hours
+                endDateLabel.text = endDate!.format(with: "dd MMM YYYY HH:mm aa")
+            }
+        }
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // Do any additional setup after loading the view.
-        
         if let event = event {
-            startDateLabel.text = event.startDate.format(with: "dd MMM YYYY HH:mm aa")
-            endDateLabel.text = event.endDate.format(with: "dd MMM YYYY HH:mm aa")
+            //startDateLabel.text = event.startDate.format(with: "dd MMM YYYY HH:mm aa")
+            //endDateLabel.text = event.endDate.format(with: "dd MMM YYYY HH:mm aa")
+            
+            startDate = event.startDate
+            endDate = event.endDate
+            
         }
         
+        let gesture1 = UITapGestureRecognizer(target: self, action:  #selector(self.startDateTapped))
+        startDateView.addGestureRecognizer(gesture1)
+        
+        let gesture2 = UITapGestureRecognizer(target: self, action:  #selector(self.endDateTapped))
+        endDateView.addGestureRecognizer(gesture2)
+
+    }
+    
+    
+    
+    @objc func startDateTapped(sender : UITapGestureRecognizer) {
+        presentDatePicker(date: startDate!, tag: 1)
+    }
+    
+    @objc func endDateTapped(sender : UITapGestureRecognizer) {
+        presentDatePicker(date: endDate!, tag: 2)
+    }
+    
+    func presentDatePicker(date: Date, tag: Int) {
+        let picker = DatePickerController()
+        picker.date = date
+        picker.datePicker.tag = tag
+        picker.datePicker.minimumDate = event?.startDate
+        picker.datePicker.maximumDate = event?.endDate
+        picker.datePicker.minuteInterval = 30
+        picker.delegate = self
+        let navC = UINavigationController(rootViewController: picker)
+        navigationController?.present(navC, animated: true, completion: nil)
     }
     
     @IBAction func sendRequestButtonTapped(_ sender: Any) {
@@ -53,6 +118,16 @@ class AddRequestViewController: UIViewController {
             popup.addButton(buttonOne)
             popup.addButton(buttonTwo)
             
+            self.present(popup, animated: true, completion: nil)
+            
+        }else if startDate! >= endDate!{
+            
+            let popup =  PopupDialog(title: "Info", message: "The start date cannot be greater than the end date.")
+                       
+            let buttonOne = CancelButton(title: "OK") {
+            }
+                       
+            popup.addButton(buttonOne)
             self.present(popup, animated: true, completion: nil)
             
         }else {
@@ -83,7 +158,7 @@ class AddRequestViewController: UIViewController {
             if let course = self.course {
                 
                 loader.showLoading()
-                var request = Request(title: "USER", startDate: event.startDate, endDate: event.endDate, allDay: event.allDay, userID: tutor.document!.documentID, eventID: event.document!.documentID, requestUserID: ".", course: course.name, state: "PENDING", message: message)
+                var request = Request(title: "USER", startDate: self.startDate!, endDate: self.endDate!, allDay: event.allDay, userID: tutor.document!.documentID, eventID: event.document!.documentID, requestUserID: ".", course: course.name, state: "PENDING", message: message, isRead: false)
                 
                 var ref: DocumentReference? = nil
                 ref = userAuth.document!.collection("requests").addDocument(data: request.dictionary)  { err in
@@ -133,4 +208,22 @@ class AddRequestViewController: UIViewController {
         }
         
     }
+}
+
+extension AddRequestViewController: DatePickerControllerDelegate {
+    
+    func datePicker(controller: DatePickerController, didSelect date: Date?) {
+        
+        if let date = date {
+            if controller.datePicker.tag == 1 {
+                //startDateLabel.text = date.format(with: "dd MMM YYYY HH:mm aa")
+                startDate = date
+            }else {
+                //endDateLabel.text = date.format(with: "dd MMM YYYY HH:mm aa")
+                endDate = date
+            }
+        }
+        
+    }
+    
 }

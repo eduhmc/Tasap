@@ -2,8 +2,8 @@
 //  UserDefaultManager.swift
 //  iOSProject
 //
-//  Created by Roger Arroyo on 6/13/20.
-//  Copyright © 2020 Eduardo Huerta. All rights reserved.
+//  Created by Eduardo Huerta-Mercado on 6/13/20.
+//  Copyright © 2020 Eduardo Huerta-Mercado. All rights reserved.
 //
 
 import Foundation
@@ -12,6 +12,19 @@ import Foundation
 class UserDefaultManager {
     
     static let shared = UserDefaultManager()
+    
+    var isFirstHome: Bool {
+        
+        get {
+            let ud = UserDefaults.standard
+            return ud.bool(forKey: "isFirstHome")
+        }
+        set{
+            let ud = UserDefaults.standard
+            ud.set(newValue, forKey: "isFirstHome")
+        }
+        
+    }
     
     var isFirstProfile: Bool {
         get {
@@ -35,6 +48,17 @@ class UserDefaultManager {
         }
     }
     
+    var isFirstHamburgerProfile: Bool {
+        get {
+            let ud = UserDefaults.standard
+            return ud.bool(forKey: "isFirstHamburgerProfile")
+        }
+        set{
+            let ud = UserDefaults.standard
+            ud.set(newValue, forKey: "isFirstHamburgerProfile")
+        }
+    }
+    
     var isFirstCalendar: Bool {
         get {
             let ud = UserDefaults.standard
@@ -43,6 +67,17 @@ class UserDefaultManager {
         set{
             let ud = UserDefaults.standard
             ud.set(newValue, forKey: "isFirstCalendar")
+        }
+    }
+    
+    var isFirstUpdateCareer: Bool {
+        get {
+            let ud = UserDefaults.standard
+            return ud.bool(forKey: "isFirstUpdateCareer")
+        }
+        set{
+            let ud = UserDefaults.standard
+            ud.set(newValue, forKey: "isFirstUpdateCareer")
         }
     }
     
@@ -70,8 +105,11 @@ class UserDefaultManager {
             ud.set(true, forKey: "isConfigAppDelegate")
             isFirstCalendar = true
             isFirstAddEvent = true
+            ud.set(true, forKey: "isFirstHome")
             ud.set(true, forKey: "isFirstProfile")
+            ud.set(true, forKey: "isFirstHamburgerProfile")
             ud.set(true, forKey: "isFirstProfileDetail")
+            ud.set(true, forKey: "isFirstUpdateCareer")
             ud.set(true, forKey: "isFirstProfileCreateEvent")
             
         }

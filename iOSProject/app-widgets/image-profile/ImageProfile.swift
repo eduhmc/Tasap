@@ -2,8 +2,19 @@
 //  ImageProfile.swift
 //  iOSProject
 //
-//  Created by everis on 8/28/20.
-//  Copyright © 2020 Eduardo Huerta. All rights reserved.
+//  Created by Eduardo Huerta-Mercado on 8/28/20.
+//  Copyright © 2020 Eduardo Huerta-Mercado. All rights reserved.
 //
 
-import Foundation
+import UIKit
+
+class ImageProfile {
+    
+    
+    static let shared = ImageProfile()
+    
+    init() {
+
+    }
+    
+}

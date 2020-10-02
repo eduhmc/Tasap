@@ -1,36 +1,36 @@
 //
-//  MyCoursesListProtocol.swift
+//  MyCoursesProtocol.swift
 //  iOSProject
 //
 //  Created by everis on 9/21/20.
-//  Copyright © 2020 Eduardo Huerta. All rights reserved.
+//  Copyright © 2020 Eduardo Huerta-Mercado. All rights reserved.
 //
 
 import Foundation
 
-protocol MyCoursesListViewToPresenterProtocol: class {
+protocol MyCoursesViewToPresenterProtocol: class {
     
-    var view: MyCoursesListPresenterToViewProtocol? {get set}
-    var interactor: MyCoursesListPresenterToInteractorProtocol? {get set}
-    var router: MyCoursesListPresenterToRouterProtocol? {get set}
+    var view: MyCoursesPresenterToViewProtocol? {get set}
+    var interactor: MyCoursesPresenterToInteractorProtocol? {get set}
+    var router: MyCoursesPresenterToRouterProtocol? {get set}
     
     func loadCourses()
     
 }
 
-protocol MyCoursesListPresenterToViewProtocol: class {
+protocol MyCoursesPresenterToViewProtocol: class {
     func showCourses(courses: [Course])
 }
 
-protocol MyCoursesListPresenterToInteractorProtocol: class {
-    var presenter:MyCoursesListInteractorToPresenterProtocol? {get set}
+protocol MyCoursesPresenterToInteractorProtocol: class {
+    var presenter:MyCoursesInteractorToPresenterProtocol? {get set}
     func fetchCourses()
 }
 
-protocol MyCoursesListInteractorToPresenterProtocol: class {
+protocol MyCoursesInteractorToPresenterProtocol: class {
     func showCourses(courses: [Course])
 }
 
-protocol MyCoursesListPresenterToRouterProtocol: class {
-    static func createMyCoursesModule(view: CalendarView, model: CalendarModel)
+protocol MyCoursesPresenterToRouterProtocol: class {
+    static func createMyCoursesModule(view: MyCoursesView)
 }

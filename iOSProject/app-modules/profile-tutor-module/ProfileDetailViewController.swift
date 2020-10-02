@@ -2,8 +2,8 @@
 //  ProfileDetailViewController.swift
 //  iOSProject
 //
-//  Created by Roger Arroyo on 4/24/20.
-//  Copyright © 2020 Eduardo Huerta. All rights reserved.
+//  Created by Eduardo Huerta-Mercado on 4/24/20.
+//  Copyright © 2020 Eduardo Huerta-Mercado. All rights reserved.
 //
 
 import UIKit
@@ -37,7 +37,6 @@ class ProfileDetailViewController: UIViewController {
     let priceText = "That’s your price per hour. Students will see this when looking for tutors."
     let reputationText = "That’s your rating as a tutor, strive for five stars!"
     let reviewText = "Those are your reviews, strive for good comments!"
-    let barbuttonsText = "There are two buttons in the upper right corner. With the first one, you can add your availability in the calendar. With the second one, you can edit the courses in which you are a tutor."
     let nextButtonText = "Ok!"
     
     weak var snapshotDelegate: CoachMarksControllerDelegate?
@@ -374,7 +373,7 @@ extension ProfileDetailViewController: CoachMarksControllerDelegate {
 extension ProfileDetailViewController: CoachMarksControllerDataSource {
     
     func numberOfCoachMarks(for coachMarksController: CoachMarksController) -> Int {
-        5
+        4
     }
     
     func coachMarksController(_ coachMarksController: CoachMarksController, coachMarkAt index: Int) -> CoachMark {
@@ -395,15 +394,6 @@ extension ProfileDetailViewController: CoachMarksControllerDataSource {
             return coachMarksController.helper.makeCoachMark(for: self.ratingLabel)
         case 3:
             return coachMarksController.helper.makeCoachMark(for: self.reviewTableView)
-        case 4:
-            return coachMarksController.helper.makeCoachMark(
-                for: self.navigationController?.navigationBar,
-                cutoutPathMaker: { (frame: CGRect) -> UIBezierPath in
-                    // This will make a cutoutPath matching the shape of
-                    // the component (no padding, no rounded corners).
-                    return UIBezierPath(rect: frame)
-                }
-            )
         default:
             return coachMarksController.helper.makeCoachMark()
         }
@@ -431,27 +421,11 @@ extension ProfileDetailViewController: CoachMarksControllerDataSource {
         case 3:
             coachViews.bodyView.hintLabel.text = self.reviewText
             coachViews.bodyView.nextLabel.text = self.nextButtonText
-        case 4:
-            coachViews.bodyView.hintLabel.text = self.barbuttonsText
-            coachViews.bodyView.nextLabel.text = self.nextButtonText
-            coachViews.bodyView.nextControl?.addTarget(self, action: #selector(gotoCalendar), for: .touchUpInside)
         default: break
         }
 
         return (bodyView: coachViews.bodyView, arrowView: coachViews.arrowView)
 
-    }
-
-    @objc func gotoCalendar(){
-        
-        let storyboard = UIStoryboard.init(name: "Calendar", bundle: nil)
-        let vc = storyboard.instantiateViewController(withIdentifier: "CalendarView") as! CalendarView
-        
-        let calendarModel = CalendarModel(isOnlyView: false, user: userAuth, course: nil)
-        
-        CalendarRouter.createCalendarModule(view: vc, model: calendarModel)
-        vc.modalPresentationStyle = .automatic
-        self.navigationController?.pushViewController(vc, animated: true)
     }
     
 }

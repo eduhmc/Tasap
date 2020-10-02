@@ -2,8 +2,8 @@
 //  ViewController.swift
 //  iOSProject
 //
-//  Created by Roger Arroyo on 4/1/20.
-//  Copyright © 2020 Eduardo Huerta. All rights reserved.
+//  Created by Eduardo Huerta-Mercado on 4/1/20.
+//  Copyright © 2020 Eduardo Huerta-Mercado. All rights reserved.
 //
 
 import UIKit
@@ -20,7 +20,7 @@ class ViewController: UIViewController {
     @IBOutlet weak var passwordTextField: TweeAttributedTextField!
     @IBOutlet weak var loginButton: UIButton!
     @IBOutlet weak var registerButton: UIButton!
-    
+   
     let db = Firestore.firestore()
     
     override func viewDidLoad() {
@@ -75,7 +75,12 @@ class ViewController: UIViewController {
                 }
                 
                 loader.hideLoading()
-                strongSelf.performSegue(withIdentifier: "homeSegue", sender: user)
+                //strongSelf.performSegue(withIdentifier: "homeSegue", sender: user)
+                
+               // let navigationController = UINavigationController(rootViewController: TabBarController())
+                strongSelf.resetWindow(with: TabBarController())
+            
+                
             case .failure(let error):
                 loader.hideLoading()
                 
@@ -85,6 +90,7 @@ class ViewController: UIViewController {
         }
         
     }
+    
 
     @IBAction func registerButtonTapped(_ sender: UIButton) {
         performSegue(withIdentifier: "registerSegue", sender: self)
@@ -125,11 +131,10 @@ class ViewController: UIViewController {
               
         if segue.identifier == "homeSegue" {
 
-            let user = sender as! User
             let tabCtrl: UITabBarController = segue.destination as! UITabBarController
             let navCtrl: UINavigationController = tabCtrl.viewControllers![0] as! UINavigationController
-            let destinationVC = navCtrl.viewControllers[0] as! HomeController
-            destinationVC.user = user
+            let destinationVC = navCtrl.viewControllers[0] as! HomeView
+            HomeRouter.createHomeModule(view: destinationVC)
 
         }
 
@@ -145,3 +150,18 @@ extension ViewController: UITextFieldDelegate {
     }
     
 }
+
+extension UIViewController {
+    func resetWindow(with vc: UIViewController?) {
+        guard let sceneDelegate = UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate else {
+            fatalError("could not get scene delegate ")
+        }
+        sceneDelegate.window?.rootViewController = vc
+    }
+    
+    func showViewController(with id: String) {
+        let vc = storyboard?.instantiateViewController(identifier: id)
+        resetWindow(with: vc)
+    }
+}
+

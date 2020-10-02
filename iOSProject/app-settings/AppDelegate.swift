@@ -2,8 +2,8 @@
 //  AppDelegate.swift
 //  iOSProject
 //
-//  Created by Roger Arroyo on 4/1/20.
-//  Copyright © 2020 Eduardo Huerta. All rights reserved.
+//  Created by Eduardo Huerta-Mercado on 4/1/20.
+//  Copyright © 2020 Eduardo Huerta-Mercado. All rights reserved.
 //
 
 import UIKit
@@ -30,10 +30,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             UserDefaultManager.shared.setupAppDelegate()
         }
         
-        if #available(iOS 13.0, *) {
-            window?.overrideUserInterfaceStyle = .light
-        }
-         
         return true
     }
 

@@ -1,7 +1,81 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13142" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15705" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12042"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15706"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
-    <scenes/>
+    <scenes>
+        <!--My Courses View-->
+        <scene sceneID="9tT-gr-sGp">
+            <objects>
+                <viewController storyboardIdentifier="MyCoursesView" id="4mE-C0-Tc1" customClass="MyCoursesView" customModule="tasap" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="kSg-i6-ur9">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" allowsSelection="NO" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="e7M-pB-XI2">
+                                <rect key="frame" x="0.0" y="44" width="414" height="818"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                                <prototypes>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="MyCoursesCell" rowHeight="100" id="QBM-Tk-8lK" customClass="MyCoursesCell" customModule="tasap" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="28" width="414" height="100"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="QBM-Tk-8lK" id="tQ6-Tu-l3O">
+                                            <rect key="frame" x="0.0" y="0.0" width="414" height="100"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3iP-Uu-mXU">
+                                                    <rect key="frame" x="20" y="26" width="374" height="21"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1xd-ZC-0gl">
+                                                    <rect key="frame" x="20" y="57" width="374" height="21"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="1xd-ZC-0gl" firstAttribute="leading" secondItem="tQ6-Tu-l3O" secondAttribute="leadingMargin" id="8MV-ya-CkC"/>
+                                                <constraint firstAttribute="trailingMargin" secondItem="1xd-ZC-0gl" secondAttribute="trailing" id="9Sr-l1-do5"/>
+                                                <constraint firstItem="3iP-Uu-mXU" firstAttribute="top" secondItem="tQ6-Tu-l3O" secondAttribute="topMargin" constant="15" id="9gu-N6-T1a"/>
+                                                <constraint firstAttribute="trailingMargin" secondItem="3iP-Uu-mXU" secondAttribute="trailing" id="HvL-bM-W7r"/>
+                                                <constraint firstItem="1xd-ZC-0gl" firstAttribute="top" secondItem="3iP-Uu-mXU" secondAttribute="bottom" constant="10" id="NfX-oy-ioU"/>
+                                                <constraint firstItem="3iP-Uu-mXU" firstAttribute="leading" secondItem="tQ6-Tu-l3O" secondAttribute="leadingMargin" id="UAy-mc-Nmp"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                        <connections>
+                                            <outlet property="careerNameLabel" destination="1xd-ZC-0gl" id="BuG-ov-6BA"/>
+                                            <outlet property="courseNameLabel" destination="3iP-Uu-mXU" id="gMO-l5-X67"/>
+                                        </connections>
+                                    </tableViewCell>
+                                </prototypes>
+                                <connections>
+                                    <outlet property="dataSource" destination="4mE-C0-Tc1" id="SVl-6N-U4W"/>
+                                    <outlet property="delegate" destination="4mE-C0-Tc1" id="vxW-gW-7gg"/>
+                                </connections>
+                            </tableView>
+                        </subviews>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <constraints>
+                            <constraint firstItem="e7M-pB-XI2" firstAttribute="trailing" secondItem="ZAd-DC-yb3" secondAttribute="trailing" id="ETA-Xh-92m"/>
+                            <constraint firstItem="e7M-pB-XI2" firstAttribute="leading" secondItem="ZAd-DC-yb3" secondAttribute="leading" id="Oup-81-zT9"/>
+                            <constraint firstItem="e7M-pB-XI2" firstAttribute="top" secondItem="ZAd-DC-yb3" secondAttribute="top" id="i5J-HP-hWM"/>
+                            <constraint firstItem="e7M-pB-XI2" firstAttribute="bottom" secondItem="ZAd-DC-yb3" secondAttribute="bottom" id="tBE-b0-0tN"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="ZAd-DC-yb3"/>
+                    </view>
+                    <connections>
+                        <outlet property="coursesTableView" destination="e7M-pB-XI2" id="Xf6-Jg-t8Q"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="yEP-uU-VVd" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-14.492753623188406" y="43.526785714285715"/>
+        </scene>
+    </scenes>
 </document>

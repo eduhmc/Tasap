@@ -2,8 +2,8 @@
 //  HomeTutorDetailViewController.swift
 //  iOSProject
 //
-//  Created by Roger Arroyo on 4/17/20.
-//  Copyright © 2020 Eduardo Huerta. All rights reserved.
+//  Created by Eduardo Huerta-Mercado on 4/17/20.
+//  Copyright © 2020 Eduardo Huerta-Mercado. All rights reserved.
 //
 
 import UIKit
@@ -167,12 +167,30 @@ class HomeTutorDetailViewController: UIViewController {
     }
     
     @IBAction func calendarButtonTapped(_ sender: UIBarButtonItem) {
-        performSegue(withIdentifier: "calendarSegue", sender: tutor)
+        
+        let storyboard = UIStoryboard.init(name: "Calendar", bundle: nil)
+        let vc = storyboard.instantiateViewController(withIdentifier: "CalendarView") as! CalendarView
+        
+        let calendarModel = CalendarModel(isOnlyView: true, user: tutor, course: course)
+        
+        CalendarRouter.createCalendarModule(view: vc, model: calendarModel)
+        vc.modalPresentationStyle = .automatic
+        self.navigationController?.pushViewController(vc, animated: true)
+        
     }
     
     
     @IBAction func reserveButtonTapped(_ sender: Any) {
-        performSegue(withIdentifier: "calendarSegue", sender: tutor)
+        
+        let storyboard = UIStoryboard.init(name: "Calendar", bundle: nil)
+        let vc = storyboard.instantiateViewController(withIdentifier: "CalendarView") as! CalendarView
+        
+        let calendarModel = CalendarModel(isOnlyView: true, user: tutor, course: course)
+        
+        CalendarRouter.createCalendarModule(view: vc, model: calendarModel)
+        vc.modalPresentationStyle = .automatic
+        self.navigationController?.pushViewController(vc, animated: true)
+        
     }
     
     @IBAction func chatButtonTapped(_ sender: Any) {
@@ -374,13 +392,15 @@ class HomeTutorDetailViewController: UIViewController {
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         
-        if segue.identifier == "calendarSegue" {
+        /*if segue.identifier == "calendarSegue" {
             let tutor = sender as! User
-            let destinationVC = segue.destination as! CalendarViewController
+            let destinationVC = segue.destination as! CalendarView
             destinationVC.user = tutor
             destinationVC.course = course
             destinationVC.isOnlyView = true
-        }else if segue.identifier == "chatSegue" {
+        }*/
+        
+        if segue.identifier == "chatSegue" {
             
             let destinationVC = segue.destination as! ChatViewController
             

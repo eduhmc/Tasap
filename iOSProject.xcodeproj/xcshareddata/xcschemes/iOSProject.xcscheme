@@ -15,7 +15,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "2211D5F72435899600E923DC"
-               BuildableName = "tasap.app"
+               BuildableName = "Tasap.app"
                BlueprintName = "iOSProject"
                ReferencedContainer = "container:iOSProject.xcodeproj">
             </BuildableReference>
@@ -55,7 +55,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "2211D5F72435899600E923DC"
-            BuildableName = "tasap.app"
+            BuildableName = "Tasap.app"
             BlueprintName = "iOSProject"
             ReferencedContainer = "container:iOSProject.xcodeproj">
          </BuildableReference>
@@ -72,7 +72,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "2211D5F72435899600E923DC"
-            BuildableName = "tasap.app"
+            BuildableName = "Tasap.app"
             BlueprintName = "iOSProject"
             ReferencedContainer = "container:iOSProject.xcodeproj">
          </BuildableReference>

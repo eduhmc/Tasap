@@ -2,8 +2,8 @@
 //  HomeController.swift
 //  iOSProject
 //
-//  Created by Roger Arroyo on 5/2/20.
-//  Copyright © 2020 Eduardo Huerta. All rights reserved.
+//  Created by Eduardo Huerta-Mercado on 5/2/20.
+//  Copyright © 2020 Eduardo Huerta-Mercado. All rights reserved.
 //
 
 import UIKit
@@ -11,91 +11,103 @@ import FirebaseFirestore
 import PopupDialog
 import Instructions
 
-class HomeView: UIViewController {
-
+class HomeView: UIViewController, HomePresenterToViewProtocol {
+    
     // MARK: - IBOutlet
     @IBOutlet weak var nameLabel: UILabel!
     @IBOutlet weak var universityLabel: UILabel!
     
     @IBOutlet weak var findTutorView: UIView!
-    @IBOutlet weak var chatView: UIView!
     @IBOutlet weak var requestView: UIView!
+    
+    @IBOutlet weak var chatView: UIView!
+    @IBOutlet weak var chatImageView: UIImageView!
+    
     @IBOutlet weak var meetingView: UIView!
+    @IBOutlet weak var meetingImageView: UIImageView!
+    
+    
     
     // MARK: - Public properties
-    public var user: User?
-    
+    var model: HomeModel?
+    var presenter: HomeViewToPresenterProtocol?
     var coachMarksController = CoachMarksController()
-    
-    let homeSectionText = "You are in the Home section"
-    let findTutorText = "In this section you can find the best tutors!"
-    let chatText = "In this section you will find all the conversations you start"
-    let requestText = "In this section you will see the requests that you send or receive"
-    let meetingText = "In this section you will see all the accepted requests"
-    let nextButtonText = "OK!"
-    
     weak var snapshotDelegate: CoachMarksControllerDelegate?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        //MARK: Instructions Setup
         self.coachMarksController.dataSource = self
         self.coachMarksController.delegate = self
         
-        if UserDefaultManager.shared.isFirstHome {
-            startInstructions()
-            UserDefaultManager.shared.isFirstHome = false
-        }
+        presenter?.loadInformation(view: self)
         
-        if let userAuth = AuthenticationManager.shared.currentUser{
-           
-            nameLabel.text = "Hello \(userAuth.first)"
-            
-            UniversityAPI.shared.get(documentID: userAuth.university) { result in
-                switch result {
-                    case .success(let document):
-                    
-                        if let university = University(dictionary: document.data()!){
-                            
-                            AuthenticationManager.shared.currentUniversity = university
-                            self.universityLabel.text = university.name
-                            
-                        }
-                    
-                    case .failure(let error):
-                        print(error)
-                        self.universityLabel.text = ""
-                        print("Document does not exist")
-                }
-            }
-            
-        }
+        navigationItem.largeTitleDisplayMode = .always
+        
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         coachMarksController.overlay.isUserInteractionEnabled = false
-    }
-    
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-    
+        presenter?.loadNumberOfRequest()
+        presenter?.loadNumberOfChats()
+        
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-
         coachMarksController.stop(immediately: true)
     }
-
     
+    func showInformation(model: HomeModel) {
+        
+        if let userAuth = AuthenticationManager.shared.currentUser{
+            self.model = model
+            nameLabel.text = "Hello \(userAuth.first)"
+            universityLabel.text = model.university.name
+            
+            if model.isFirstHome {
+                
+                let popup = PopupDialog(title: "Welcome to Tasap App", message: "Would you like to start the tutorial ?")
+                
+                // Create first button
+                let buttonOne = DestructiveButton(title: "No thanks", height: 60) {
+                   
+                }
+
+                // Create second button
+                let buttonTwo = DefaultButton(title: "Let's go", height: 60) {
+                    self.startInstructions()
+                    
+                }
+                popup.addButtons([buttonOne, buttonTwo])
+                    
+                self.present(popup, animated: true, completion: nil)
+                
+                self.model!.isFirstHome = false
+                
+            }
+            
+        }
+        
+    }
+    
+    func showNumberOfRequest(number: Int) {
+        meetingImageView.clipsToBounds = false
+        meetingImageView.badge(text: number == 0 ? nil : number.description)
+    }
+    
+    func showNumberOfChats(number: Int) {
+        chatImageView.clipsToBounds = false
+        chatImageView.badge(text: number == 0 ? nil : number.description)
+    }
+
     @IBAction func tutorButtonTapped(_ sender: Any) {
         performSegue(withIdentifier: "careerSegue", sender: nil)
     }
     
     @IBAction func otherButtonTapped(_ sender: Any) {
-       performSegue(withIdentifier: "chatSegue", sender: nil)
+        presenter?.showChatModule(fromView: self)
     }
     
     @IBAction func requestButtonTapped(_ sender: Any) {
@@ -120,7 +132,7 @@ class HomeView: UIViewController {
   
     }
     
-    func startInstructions() {
+    @objc func startInstructions() {
         coachMarksController.start(in: .window(over: self))
     }
     
@@ -129,7 +141,7 @@ class HomeView: UIViewController {
         if segue.identifier == "careerSegue" {
             
             let destinationVC = segue.destination as! HomeViewController
-            destinationVC.user = self.user
+            destinationVC.user = AuthenticationManager.shared.currentUser!
             
         }
    
@@ -235,20 +247,20 @@ extension HomeView: CoachMarksControllerDataSource {
 
         switch index {
         case 0:
-            coachViews.bodyView.hintLabel.text = self.homeSectionText
-            coachViews.bodyView.nextLabel.text = self.nextButtonText
+            coachViews.bodyView.hintLabel.text = self.model!.homeSectionText
+            coachViews.bodyView.nextLabel.text = self.model!.nextButtonText
         case 1:
-            coachViews.bodyView.hintLabel.text = self.findTutorText
-            coachViews.bodyView.nextLabel.text = self.nextButtonText
+            coachViews.bodyView.hintLabel.text = self.model!.findTutorText
+            coachViews.bodyView.nextLabel.text = self.model!.nextButtonText
         case 2:
-            coachViews.bodyView.hintLabel.text = self.chatText
-            coachViews.bodyView.nextLabel.text = self.nextButtonText
+            coachViews.bodyView.hintLabel.text = self.model!.chatText
+            coachViews.bodyView.nextLabel.text = self.model!.nextButtonText
         case 3:
-            coachViews.bodyView.hintLabel.text = self.requestText
-            coachViews.bodyView.nextLabel.text = self.nextButtonText
+            coachViews.bodyView.hintLabel.text = self.model!.requestText
+            coachViews.bodyView.nextLabel.text = self.model!.nextButtonText
         case 4:
-            coachViews.bodyView.hintLabel.text = self.meetingText
-            coachViews.bodyView.nextLabel.text = self.nextButtonText
+            coachViews.bodyView.hintLabel.text = self.model!.meetingText
+            coachViews.bodyView.nextLabel.text = self.model!.nextButtonText
         default: break
         }
 
